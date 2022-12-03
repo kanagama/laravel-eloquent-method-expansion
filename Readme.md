@@ -245,7 +245,7 @@ $users = DB::table('users')
 <br><br>
 
 
-### where[columnName]Date
+### where[columnName]Date, orWhere[columnName]Date
 <!-- TODO -->
 where[columnName]Date メソッドは、columName の値と日付を比較できます。
 
@@ -258,8 +258,62 @@ $users = DB::table('users')
 ```
 <br><br>
 
+### where[columnName]DateGt, orWhere[columnName]DateGt
+<!-- TODO -->
+where[columnName]DateGt メソッドは、columName の値と日付を > で比較できます。
 
-### where[columnName]Month
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeDateGt('2022-12-02')
+            ->get();
+
+#
+```
+<br><br>
+
+### where[columnName]DateGte, orWhere[columnName]DateGte
+<!-- TODO -->
+where[columnName]DateGte メソッドは、columName の値と日付を >= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeDateGte('2022-12-02')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]DateLt, orWhere[columnName]DateLt
+<!-- TODO -->
+where[columnName]DateLt メソッドは、columName の値と日付を < で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeDateLt('2022-12-02')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]DateLte, orWhere[columnName]DateLte
+<!-- TODO -->
+where[columnName]DateLte メソッドは、columName の値と日付を <= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeDateLte('2022-12-02')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]Month, orWhere[columnName]Month
 <!-- TODO -->
 where[columnName]Month メソッドは、columName の値と特定の月を比較できます。
 
@@ -273,7 +327,63 @@ $users = DB::table('users')
 <br><br>
 
 
-### where[columnName]Day
+### where[columnName]MonthGt, orWhere[columnName]MonthGt
+<!-- TODO -->
+where[columnName]MonthGt メソッドは、columName の値と特定の月を > で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthGt('10')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]MonthGte, orWhere[columnName]MonthGte
+<!-- TODO -->
+where[columnName]MonthGte メソッドは、columName の値と特定の月を >= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthGte('10')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]MonthLt, orWhere[columnName]MonthLt
+<!-- TODO -->
+where[columnName]MonthLt メソッドは、columName の値と特定の月を < で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthLt('10')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]MonthLte, orWhere[columnName]MonthLte
+<!-- TODO -->
+where[columnName]MonthLte メソッドは、columName の値と特定の月を <= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthLte('10')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]Day, orWhere[columnName]Day
 <!-- TODO -->
 where[columnName]Day メソッドは、columName の値と特定の日を比較できます。
 
@@ -287,7 +397,63 @@ $users = DB::table('users')
 <br><br>
 
 
-### where[columnName]Year
+### where[columnName]DayGt, orWhere[columnName]DayGt
+<!-- TODO -->
+where[columnName]DayGt メソッドは、columName の値と特定の日を > で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthGt('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]DayGte, orWhere[columnName]DayGte
+<!-- TODO -->
+where[columnName]DayGte メソッドは、columName の値と特定の日を >= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthGte('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]DayLt, orWhere[columnName]DayLt
+<!-- TODO -->
+where[columnName]DayLt メソッドは、columName の値と特定の日を < で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthLt('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]DayLte, orWhere[columnName]DayLte
+<!-- TODO -->
+where[columnName]DayLte メソッドは、columName の値と特定の日を <= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeMonthLte('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]Year, orWhere[columnName]Year
 <!-- TODO -->
 where[columnName]Year メソッドは、columName の値と特定の年を比較できます。
 
@@ -301,13 +467,125 @@ $users = DB::table('users')
 <br><br>
 
 
-### where[columnName]Time
+### where[columnName]YearGt, orWhere[columnName]YearGt
+<!-- TODO -->
+where[columnName]YearGt メソッドは、columName の値と特定の年を > で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeYearGt('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]YearGte, orWhere[columnName]YearGte
+<!-- TODO -->
+where[columnName]YearGte メソッドは、columName の値と特定の年を >= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeYearGte('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]YearLt, orWhere[columnName]YearLt
+<!-- TODO -->
+where[columnName]YearLt メソッドは、columName の値と特定の年を < で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeYearLt('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]YearLte, orWhere[columnName]YearLte
+<!-- TODO -->
+where[columnName]YearLte メソッドは、columName の値と特定の年を <= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeYearLte('15')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]Time, orWhere[columnName]Time
 <!-- TODO -->
 where[columnName]Time メソッドは、columName の値と特定の時間を比較できます。
 
 ```php
 $users = DB::table('users')
             ->whereRentDatetimeTime('12:00:00')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]TimeGt, orWhere[columnName]TimeGt
+<!-- TODO -->
+where[columnName]TimeGt メソッドは、columName の値と特定の時間を > で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeTimeGt('12:00:00')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]TimeGte, orWhere[columnName]TimeGte
+<!-- TODO -->
+where[columnName]TimeGte メソッドは、columName の値と特定の時間を >= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeTimeGte('12:00:00')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]TimeLt, orWhere[columnName]TimeLt
+<!-- TODO -->
+where[columnName]TimeLt メソッドは、columName の値と特定の時間を < で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeTimeLt('12:00:00')
+            ->get();
+
+#
+```
+<br><br>
+
+
+### where[columnName]TimeLte, orWhere[columnName]TimeLte
+<!-- TODO -->
+where[columnName]TimeLte メソッドは、columName の値と特定の時間を <= で比較できます。
+
+```php
+$users = DB::table('users')
+            ->whereRentDatetimeTimeLte('12:00:00')
             ->get();
 
 #
