@@ -2,17 +2,16 @@
 
 namespace Kanagama\EloquentExpansion;
 
+use BadMethodCallException;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Str;
 
-/**
- * @autor k-nagmaa <k.nagama0632@gmail.com>
- */
-trait MethodExpansion
+class Builder extends BaseBuilder
 {
     /**
      * 後方一致（順番大事）
      */
-    protected array $backwordExpression = [
+    private const BACKWORD_EXTENSION = [
         'NotEq',
         'Eq',
         'NotLikePrefix',
@@ -32,19 +31,26 @@ trait MethodExpansion
         'Between',
         'NotExists',
         'Exists',
+        'ColumnGte',
+        'ColumnGt',
+        'ColumnLte',
+        'ColumnLt',
+        'Column',
     ];
 
     /**
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
+     *
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
-        // スコープメソッドが存在していればそのまま流す
-        if (method_exists((new self), 'scope' . ucfirst($method))) {
-            return parent::__call($method, $parameters);
-        }
+        // // スコープメソッドが存在していればそのまま流す
+        // if (method_exists((new self), 'scope' . ucfirst($method))) {
+        //     return parent::__call($method, $parameters);
+        // }
 
         // whereAllowEmpty prefix がついている、かつパラメータが空
         if (
@@ -58,7 +64,7 @@ trait MethodExpansion
         // where が先頭
         if (str_starts_with($method, 'where')) {
             $expression = $this->checkBackwordExpression($method);
-            array_unshift($parameters, Str::snake(str_replace(['whereAllowEmpty', 'where', $expression,], '', $method)));
+            $columnName = Str::snake(str_replace(['whereAllowEmpty', 'where', $expression,], '', $method));
             if ($expression) {
                 $method = 'where' . $expression;
             }
@@ -66,11 +72,18 @@ trait MethodExpansion
         // where が先頭
         if (str_starts_with($method, 'orWhere')) {
             $expression = $this->checkBackwordExpression($method);
-            array_unshift($parameters, Str::snake(str_replace(['orWhereAllowEmpty', 'orWhere', $expression,], '', $method)));
+            $columnName = Str::snake(str_replace(['orWhereAllowEmpty', 'orWhere', $expression,], '', $method));
             if ($expression) {
                 $method = 'orWhere' . $expression;
             }
         }
+
+        // 既存メソッドであればそのまま実行する
+        if (method_exists($this, $method)) {
+            return $this->{$method}($columnName, $parameters);
+        }
+
+        array_unshift($parameters, $columnName);
 
         return parent::__call($method, $parameters);
     }
@@ -81,7 +94,7 @@ trait MethodExpansion
      */
     private function checkBackwordExpression($method)
     {
-        foreach ($this->backwordExpression as $expression) {
+        foreach (self::BACKWORD_EXTENSION as $expression) {
             if (str_ends_with($method, $expression)) {
                 return $expression;
             }

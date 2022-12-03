@@ -2,7 +2,8 @@
 
 namespace Kanagama\EloquentExpansion;
 
-use Illuminate\Database\Query\Builder;
+use Kanagama\EloquentExpansion\Builder;
+use Kanagama\EloquentExpansion\Connection\ConnectionFactory;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -10,6 +11,16 @@ use Illuminate\Support\ServiceProvider;
  */
 class EloquentMethodExpansionServiceProvider extends ServiceProvider
 {
+    /**
+     *
+     */
+    public function register(): void
+    {
+        $this->app->singleton('db.factory', function ($app) {
+            return new ConnectionFactory($app);
+        });
+    }
+
     /**
      *
      */
