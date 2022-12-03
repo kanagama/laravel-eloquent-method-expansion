@@ -18,7 +18,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Kanagama\\EloquentMethodExpansion\\": "src/"
+            "Kanagama\\EloquentExpansion\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kanagama\\EloquentExpansion\\EloquentMethodExpansionServiceProvider"
+            ]
         }
     },
     "minimum-stability": "stable"
