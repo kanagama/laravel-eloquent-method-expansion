@@ -14,7 +14,7 @@ Eloquent メソッド拡張
 
 <br>
 
-### where[columnName]IsNull, orWhere[columnName]IsNull
+### where<span color="orange">[columnName]</span>IsNull, orWhere[columnName]IsNull
 
 where[columnName]IsNull メソッドは、columnName が NULL である条件を加えます。
 
