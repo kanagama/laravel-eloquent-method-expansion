@@ -6,7 +6,10 @@ Eloquent メソッド拡張
 
 ## 使い方
 
-
+インストール
+```bash
+composer require kanagama/laravel-eloquent-method-expansion
+```
 
 <br>
 
@@ -14,7 +17,7 @@ Eloquent メソッド拡張
 
 <br>
 
-### where<span color="orange">[columnName]</span>IsNull, orWhere[columnName]IsNull
+### where[columnName]IsNull, orWhere[columnName]IsNull
 
 where[columnName]IsNull メソッドは、columnName が NULL である条件を加えます。
 
@@ -380,6 +383,33 @@ $users = DB::table('users')
 # select * from users where rent_date <= return_date;
 ```
 <br><br>
+
+### where[columnName]Between, orWhere[columnName]Between
+
+where[columnName]Between メソッドは、columnName の値が２つの値の間にある条件を加えます
+
+```php
+$users = DB::table('users')
+            ->whereCreatedAtBetween(['2022-12-01', '2022-12-10',])
+            ->get();
+
+# select * from users where created_at between '2022-12-01' AND '2022-12-10'
+```
+<br><br>
+
+### where[columnName]NotBetween, orWhere[columnName]NotBetween
+
+where[columnName]NotBetween メソッドは、columnName の値が２つの値の間にある条件を加えます
+
+```php
+$users = DB::table('users')
+            ->whereCreatedAtNotBetween(['2022-12-01', '2022-12-10',])
+            ->get();
+
+# select * from users where created_at not between '2022-12-01' AND '2022-12-10'
+```
+<br><br>
+
 
 
 ## whereAllowEmpty 句
