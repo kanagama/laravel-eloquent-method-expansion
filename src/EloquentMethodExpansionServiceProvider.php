@@ -47,7 +47,7 @@ class EloquentMethodExpansionServiceProvider extends ServiceProvider
          * ->whereEq($column, $value)
          */
         Builder::macro('whereEq', function ($column, $value): Builder {
-            return $this->where($column, '=', $value, $boolean);
+            return $this->where($column, '=', $value);
         });
 
         /**
