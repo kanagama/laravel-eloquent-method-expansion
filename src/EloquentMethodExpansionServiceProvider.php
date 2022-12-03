@@ -198,7 +198,7 @@ class EloquentMethodExpansionServiceProvider extends ServiceProvider
          * ->whereLikeBackend($column, $value, $boolean = 'and')
          */
         Builder::macro('whereLikeBackword', function ($column, $value, $boolean = 'and'): Builder {
-            return $this->where($column, 'NOT LIKE', '%' . $value, $boolean);
+            return $this->where($column, 'LIKE', '%' . $value, $boolean);
         });
 
         /**
@@ -222,9 +222,340 @@ class EloquentMethodExpansionServiceProvider extends ServiceProvider
             return $this->where($column, 'NOT LIKE', '%' . $value, 'or');
         });
 
-        // whereColumnGt
-        // whereColumnGte
-        // whereColumnLt
-        // whereColumnLte
+        /**
+         * ->whereColumnGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereColumnGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereColumn($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereColumnGt($column, $value)
+         */
+        Builder::macro('orWhereColumnGt', function ($column, $value): Builder {
+            return $this->whereColumn($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereColumnGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereColumnGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereColumn($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereColumnGt($column, $value)
+         */
+        Builder::macro('orWhereColumnGte', function ($column, $value): Builder {
+            return $this->whereColumn($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereColumnGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereColumnLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereColumn($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereColumnGt($column, $value)
+         */
+        Builder::macro('orWhereColumnLt', function ($column, $value): Builder {
+            return $this->whereColumn($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereColumnGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereColumnLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereColumn($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereColumnGt($column, $value)
+         */
+        Builder::macro('orWhereColumnLte', function ($column, $value): Builder {
+            return $this->whereColumn($column, '<=', $value, 'or');
+        });
+
+        /**
+         * ->whereDateGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDateGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDate($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereDateGt($column, $value)
+         */
+        Builder::macro('orWhereDateGt', function ($column, $value): Builder {
+            return $this->whereDate($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereDateGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDateGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDate($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereDateGte($column, $value)
+         */
+        Builder::macro('orWhereDateGte', function ($column, $value): Builder {
+            return $this->whereDate($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereDateLt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDateLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDate($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereDateLt($column, $value)
+         */
+        Builder::macro('orWhereDateLt', function ($column, $value): Builder {
+            return $this->whereDate($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereDateLte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDateLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDate($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orWhereDateLte($column, $value)
+         */
+        Builder::macro('orWhereDateLte', function ($column, $value): Builder {
+            return $this->whereDate($column, '<=', $value, 'or');
+        });
+
+        /**
+         * ->whereMonthGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereMonthGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereMonth($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereMonthGt($column, $value)
+         */
+        Builder::macro('orWhereMonthGt', function ($column, $value): Builder {
+            return $this->whereMonth($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereMonthGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereMonthGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereMonth($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereMonthGte($column, $value)
+         */
+        Builder::macro('orWhereMonthGte', function ($column, $value): Builder {
+            return $this->whereMonth($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereMonthLt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereMonthLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereMonth($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereMonthLt($column, $value)
+         */
+        Builder::macro('orWhereMonthLt', function ($column, $value): Builder {
+            return $this->whereMonth($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereMonthLte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereMonthLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereMonth($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereMonthLte($column, $value)
+         */
+        Builder::macro('orWhereMonthLte', function ($column, $value): Builder {
+            return $this->whereMonth($column, '<=', $value, 'or');
+        });
+
+        /**
+         * ->whereDayGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDayGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDay($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereDayGt($column, $value)
+         */
+        Builder::macro('orWhereDayGt', function ($column, $value): Builder {
+            return $this->whereDay($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereDayGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDayGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDay($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereDayGte($column, $value)
+         */
+        Builder::macro('orWhereDayGte', function ($column, $value): Builder {
+            return $this->whereDay($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereDayLt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDayLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDay($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereDayLt($column, $value)
+         */
+        Builder::macro('orWhereDayLt', function ($column, $value): Builder {
+            return $this->whereDay($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereDayLte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereDayLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereDay($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereDayLte($column, $value)
+         */
+        Builder::macro('orWhereDayLte', function ($column, $value): Builder {
+            return $this->whereDay($column, '<=', $value, 'or');
+        });
+
+        /**
+         * ->whereYearGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereYearGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereYear($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereYearGt($column, $value)
+         */
+        Builder::macro('orWhereYearGt', function ($column, $value): Builder {
+            return $this->whereYear($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereYearGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereYearGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereYear($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereYearGte($column, $value)
+         */
+        Builder::macro('orWhereYearGte', function ($column, $value): Builder {
+            return $this->whereYear($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereYearLt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereYearLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereYear($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereYearLt($column, $value)
+         */
+        Builder::macro('orWhereYearLt', function ($column, $value): Builder {
+            return $this->whereYear($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereYearLte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereYearLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereYear($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereYearLte($column, $value)
+         */
+        Builder::macro('orWhereYearLte', function ($column, $value): Builder {
+            return $this->whereYear($column, '<=', $value, 'or');
+        });
+
+        /**
+         * ->whereTimeGt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereTimeGt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereTime($column, '>', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereTimeGt($column, $value)
+         */
+        Builder::macro('orWhereTimeGt', function ($column, $value): Builder {
+            return $this->whereTime($column, '>', $value, 'or');
+        });
+
+        /**
+         * ->whereTimeGte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereTimeGte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereTime($column, '>=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereTimeGte($column, $value)
+         */
+        Builder::macro('orWhereTimeGte', function ($column, $value): Builder {
+            return $this->whereTime($column, '>=', $value, 'or');
+        });
+
+        /**
+         * ->whereTimeLt($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereTimeLt', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereTime($column, '<', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereTimeLt($column, $value)
+         */
+        Builder::macro('orWhereTimeLt', function ($column, $value): Builder {
+            return $this->whereTime($column, '<', $value, 'or');
+        });
+
+        /**
+         * ->whereTimeLte($column, $value, $boolean = 'and)
+         */
+        Builder::macro('whereTimeLte', function ($column, $value, $boolean = 'and'): Builder {
+            return $this->whereTime($column, '<=', $value, $boolean);
+        });
+
+        /**
+         * ->orwhereTimeLte($column, $value)
+         */
+        Builder::macro('orWhereTimeLte', function ($column, $value): Builder {
+            return $this->whereTime($column, '<=', $value, 'or');
+        });
     }
 }

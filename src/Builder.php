@@ -12,30 +12,20 @@ class Builder extends BaseBuilder
      * 後方一致（順番大事）
      */
     private const BACKWORD_EXTENSION = [
-        'NotEq',
-        'Eq',
-        'NotLikePrefix',
-        'NotLikeBackword',
-        'NotLike',
-        'LikePrefix',
-        'LikeBackword',
-        'Like',
-        'NotIn',
-        'In',
-        'Gte',
-        'Gt',
-        'Lte',
-        'Lt',
-        'IsNotNull',
-        'IsNull',
-        'Between',
-        'NotExists',
-        'Exists',
-        'ColumnGte',
-        'ColumnGt',
-        'ColumnLte',
-        'ColumnLt',
-        'Column',
+        'ColumnGte', 'ColumnGt', 'ColumnLte', 'ColumnLt', 'Column',
+        'DateGte', 'DateGt', 'DateLte', 'DateLt', 'Date',
+        'YearGte', 'YearGt', 'YearLte', 'YearLt', 'Year',
+        'MonthGte', 'MonthGt', 'MonthLte', 'MonthLt', 'Month',
+        'DayGte', 'DayGt', 'DayLte', 'DayLt', 'Day',
+        'TimeGte', 'TimeGt', 'TimeLte', 'TimeLt', 'Time',
+        'NotEq', 'Eq',
+        'NotLikePrefix', 'NotLikeBackword', 'NotLike',
+        'LikePrefix', 'LikeBackword', 'Like',
+        'NotIn', 'In',
+        'Gte', 'Gt', 'Lte', 'Lt',
+        'IsNotNull', 'IsNull',
+        'NotBetween','Between',
+        'NotExists', 'Exists',
     ];
 
     /**
@@ -47,10 +37,10 @@ class Builder extends BaseBuilder
      */
     public function __call($method, $parameters)
     {
-        // // スコープメソッドが存在していればそのまま流す
-        // if (method_exists((new self), 'scope' . ucfirst($method))) {
-        //     return parent::__call($method, $parameters);
-        // }
+        $expression = $this->checkBackwordExpression($method);
+        if (!$expression) {
+            return parent::__call($method, $parameters);
+        }
 
         // whereAllowEmpty prefix がついている、かつパラメータが空
         if (
@@ -63,27 +53,27 @@ class Builder extends BaseBuilder
 
         // where が先頭
         if (str_starts_with($method, 'where')) {
-            $expression = $this->checkBackwordExpression($method);
             $columnName = Str::snake(str_replace(['whereAllowEmpty', 'where', $expression,], '', $method));
-            if ($expression) {
-                $method = 'where' . $expression;
-            }
+            $method = 'where' . $expression;
         }
         // where が先頭
         if (str_starts_with($method, 'orWhere')) {
-            $expression = $this->checkBackwordExpression($method);
             $columnName = Str::snake(str_replace(['orWhereAllowEmpty', 'orWhere', $expression,], '', $method));
-            if ($expression) {
-                $method = 'orWhere' . $expression;
-            }
+            $method = 'orWhere' . $expression;
         }
 
         // 既存メソッドであればそのまま実行する
         if (method_exists($this, $method)) {
-            return $this->{$method}($columnName, $parameters);
+            // if (in_array($method, ['whereColumn',])) {
+            //     return $this->{$method}($columnName, $parameters[0]);
+            // }
+            $requestParameters = (count($parameters) === 1) ? $parameters[0] : $parameters;
+            return $this->{$method}($columnName, $requestParameters);
         }
 
-        array_unshift($parameters, $columnName);
+        if (!empty($columnName)) {
+            array_unshift($parameters, $columnName);
+        }
 
         return parent::__call($method, $parameters);
     }
