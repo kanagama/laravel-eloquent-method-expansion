@@ -1,0 +1,25 @@
+{
+    "name": "kanagama/laravel-eloquent-method-expansion",
+    "description": "Eloquent メソッド拡張",
+    "keywords": [
+        "laravel",
+        "formrequest",
+        "eloquent"
+    ],
+    "authors": [
+        {
+            "name": "kazuma nagama",
+            "email": "k.nagama0632@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kanagama\\EloquentMethodExpansion\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
