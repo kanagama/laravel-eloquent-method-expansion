@@ -816,12 +816,12 @@ $users = DB::table('users')
 <br><br>
 
 
-## allowEmpty
+### allowEmpty
 
-allowEmptyオプション
+**allowEmpty**オプション
 
 
-where の後に AllowEmpty オプションを付与すると、パラメータが null や [] となる場合にその条件を省略する。
+where の後に **AllowEmpty** オプションを付与すると、パラメータが null や [] となる場合にその条件を省略する。
 
 ```php
 # $rentDatetime = null;
@@ -835,7 +835,47 @@ $users = DB::table('users')
 # select * from users where return_datetime >= '1980-05-21 00:00:00';
 ```
 
-※ AllowEmpty オプション利用不可
+#### allowEmpty の使い所
+
+管理画面（※予約管理画面など）では、予約者名、予約日、メールアドレス、電話番号、予約ステータス、その他多岐にわたる絞り込み条件が用意されていると思いますが、それを Eloquent で書くのは意外と労力が掛かります。
+
+```php
+$query = DB::table('reservations');
+
+# 絞り込み条件がリクエストパラメータに存在しているかチェックして where に追加しないといけない
+if ($request->reserve_name) {
+    $query->where('reservations.name', 'LIKE', '%'. $request->reserve_name . '%');
+}
+if ($request->reserve_date) {
+    $query->whereDate('reservations.reserve_date_at', $request->reserve_date);
+}
+if ($request->email) {
+    $query->whereEmail($request->email);
+}
+if ($request->tel) {
+    $query->whereTel($request->tel);
+}
+if ($request->status) {
+    $query->whereStatus($request->status);
+}
+// 絞り込み条件の数だけ続く
+```
+
+そんなんやってらんないよ、と思った際に使うのが **AllowEmpty** オプションです。
+
+null や [] が渡された場合、その絞り込み条件を省略しますので、メソッドチェーンで where() を全て繋げることが可能です。
+
+```php
+return DB::table('reservations');
+    ->whereAllowEmptyNameLike($request->reserve_name)
+    ->whereAllowEmptyReserveDateAtDate($request->reserve_date)
+    ->whereAllowEmptyEmailEq($request->email)
+    ->whereAllowEmptyTelEq($request->tel)
+    ->whereAllowEmptyStatusEq($request->status)
+    ->get();
+```
+
+#### AllowEmpty オプション利用不可
 - where[columnName]IsNull()
 - orWhere[columnName]IsNull()
 - where[columnName]Null()
