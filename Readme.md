@@ -3,10 +3,13 @@
 ## 機能概要
 
 Eloquent を拡張し、メソッドを追加します。
+（※正確には**拡張しているのは QueryBuilder** なのですが、リポジトリ名を先に決めてしまっていたので…）
+
 
 ### packagist
 
 https://packagist.org/packages/kanagama/laravel-eloquent-method-expansion
+
 
 ## 使い方
 
@@ -17,10 +20,10 @@ composer require kanagama/laravel-eloquent-method-expansion
 ```
 
 インストール後、下記メソッドが使えるようになります。
-
 <br>
 
-## where句
+
+## 拡張 where 句
 
 ※ **[columnName]** にはテーブルのカラム名をアッパーキャメルで入力します。
 
@@ -35,7 +38,7 @@ $users = DB::table('users')
 
 # select * from users where name IS NULL;
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]IsNotNull(), orWhere[columnName]IsNotNull()
@@ -49,7 +52,8 @@ $users = DB::table('users')
 
 # select * from users where name IS NOT NULL;
 ```
-<br><br>
+<br>
+
 
 ### where[columnName]Eq(), orWhere[columnName]Eq()
 
@@ -64,7 +68,7 @@ $users = DB::table('users')
 
 # select * from users where tel = '09099999999';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]NotEq(), orWhere[columnName]NotEq()
@@ -80,7 +84,7 @@ $users = DB::table('users')
 
 # select * from users where tel <> '09099999999';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Gt(), orWhere[columnName]Gt()
@@ -96,7 +100,7 @@ $users = DB::table('users')
 
 # select * from users where created_at > '1980-05-21';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Gte(), orWhere[columnName]Gte()
@@ -112,7 +116,7 @@ $users = DB::table('users')
 
 # select * from users where created_at >= '1980-05-21';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Lt(), orWhere[columnName]Lt()
@@ -128,7 +132,7 @@ $users = DB::table('users')
 
 # select * from users where modified_at < '1980-05-21 00:00:00';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Lte(), orWhere[columnName]Lte()
@@ -144,7 +148,7 @@ $users = DB::table('users')
 
 # select * from users where modified_at <= '1980-05-21 00:00:00';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]In(), orWhere[columnName]In()
@@ -162,7 +166,7 @@ $users = DB::table('users')
 
 # select * from users where user_status_id in (1, 2, 3);
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]NotIn(), orWhere[columnName]NotIn()
@@ -180,7 +184,7 @@ $users = DB::table('users')
 
 # select * from users where user_status_id not in (1, 2, 3);
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Like(), orWhere[columnName]Like()
@@ -196,7 +200,7 @@ $users = DB::table('users')
 
 # select * from users where address like '%沖縄県%';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]NotLike(), orWhere[columnName]NotLike()
@@ -212,7 +216,7 @@ $users = DB::table('users')
 
 # select * from users where address not like '%沖縄県%';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]LikePrefix(), orWhere[columnName]LikePrefix()
@@ -228,7 +232,7 @@ $users = DB::table('users')
 
 # select * from users where address like '沖縄県%';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]NotLikePrefix(), orWhere[columnName]NotLikePrefix()
@@ -244,7 +248,7 @@ $users = DB::table('users')
 
 # select * from users where address not like '沖縄県%';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]LikeBackword(), orWhere[columnName]Backword()
@@ -260,7 +264,7 @@ $users = DB::table('users')
 
 # select * from users where address like '%沖縄県';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]NotLikeBackword(), orWhere[columnName]NotBackword()
@@ -276,7 +280,7 @@ $users = DB::table('users')
 
 # select * from users where address not like '%沖縄県';
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Date(), orWhere[columnName]Date()
@@ -293,7 +297,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 ### where[columnName]DateGt(), orWhere[columnName]DateGt()
 
@@ -309,7 +313,8 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
+
 
 ### where[columnName]DateGte(), orWhere[columnName]DateGte()
 
@@ -325,7 +330,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DateLt(), orWhere[columnName]DateLt()
@@ -342,7 +347,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DateLte(), orWhere[columnName]DateLte()
@@ -359,7 +364,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Month(), orWhere[columnName]Month()
@@ -376,7 +381,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]MonthGt(), orWhere[columnName]MonthGt()
@@ -393,7 +398,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]MonthGte(), orWhere[columnName]MonthGte()
@@ -410,7 +415,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]MonthLt(), orWhere[columnName]MonthLt()
@@ -427,7 +432,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]MonthLte(), orWhere[columnName]MonthLte()
@@ -444,7 +449,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Day(), orWhere[columnName]Day()
@@ -461,7 +466,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DayGt(), orWhere[columnName]DayGt()
@@ -478,7 +483,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DayGte(), orWhere[columnName]DayGte()
@@ -495,7 +500,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DayLt(), orWhere[columnName]DayLt()
@@ -512,7 +517,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]DayLte(), orWhere[columnName]DayLte()
@@ -529,7 +534,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Year(), orWhere[columnName]Year()
@@ -546,7 +551,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]YearGt(), orWhere[columnName]YearGt()
@@ -563,7 +568,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]YearGte(), orWhere[columnName]YearGte()
@@ -580,7 +585,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]YearLt(), orWhere[columnName]YearLt()
@@ -597,7 +602,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]YearLte(), orWhere[columnName]YearLte()
@@ -614,7 +619,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Time(), orWhere[columnName]Time()
@@ -631,7 +636,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]TimeGt(), orWhere[columnName]TimeGt()
@@ -648,7 +653,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]TimeGte(), orWhere[columnName]TimeGte()
@@ -665,7 +670,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]TimeLt(), orWhere[columnName]TimeLt()
@@ -682,7 +687,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]TimeLte(), orWhere[columnName]TimeLte()
@@ -699,7 +704,7 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]Column(), orWhere[columnName]Column()
@@ -715,7 +720,7 @@ $users = DB::table('users')
 
 # select * from users where rent_date = return_date;
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]ColumnGt(), orWhere[columnName]ColumnGt()
@@ -732,7 +737,7 @@ $users = DB::table('users')
 
 # select * from users where rent_date > return_date;
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]ColumnGte(), orWhere[columnName]ColumnGte()
@@ -749,7 +754,7 @@ $users = DB::table('users')
 
 # select * from users where rent_date >= return_date;
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]ColumnLt(), orWhere[columnName]ColumnLt()
@@ -766,7 +771,7 @@ $users = DB::table('users')
 
 # select * from users where rent_date < return_date;
 ```
-<br><br>
+<br>
 
 
 ### where[columnName]ColumnLte(), orWhere[columnName]ColumnLte()
@@ -783,7 +788,7 @@ $users = DB::table('users')
 
 # select * from users where rent_date <= return_date;
 ```
-<br><br>
+<br>
 
 ### where[columnName]Between(), orWhere[columnName]Between()
 
@@ -798,7 +803,8 @@ $users = DB::table('users')
 
 # select * from users where created_at between '2022-12-01' AND '2022-12-10'
 ```
-<br><br>
+<br>
+
 
 ### where[columnName]NotBetween(), orWhere[columnName]NotBetween()
 
@@ -813,7 +819,7 @@ $users = DB::table('users')
 
 # select * from users where created_at not between '2022-12-01' AND '2022-12-10'
 ```
-<br><br>
+<br>
 
 
 ### allowEmpty
@@ -834,6 +840,7 @@ $users = DB::table('users')
 # null のため、whereAllowEmptyRentDatetimeGte() は省略される
 # select * from users where return_datetime >= '1980-05-21 00:00:00';
 ```
+
 
 #### allowEmpty の使い所
 
@@ -861,7 +868,8 @@ if ($request->status) {
 // 絞り込み条件の数だけ続く
 ```
 
-そんなんやってらんないよ、と思った際に使うのが **AllowEmpty** オプションです。
+
+全部 if 文で囲むとかそんなんやってらんないよ、と思った際に使うのが **AllowEmpty** オプションです。
 
 null や [] が渡された場合、その絞り込み条件を省略しますので、メソッドチェーンで where() を全て繋げることが可能です。
 
@@ -876,6 +884,7 @@ return DB::table('reservations');
 ```
 
 #### AllowEmpty オプション利用不可
+
 - where[columnName]IsNull()
 - orWhere[columnName]IsNull()
 - where[columnName]Null()
