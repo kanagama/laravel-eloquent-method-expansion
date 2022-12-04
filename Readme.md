@@ -1,28 +1,35 @@
 # Eloquent Method Expansion
 
-Eloquent メソッド拡張
+## 機能概要
 
-<br>
+Eloquent を拡張し、メソッドを追加します。
+（※正確には**拡張しているのは QueryBuilder** なのですが、リポジトリ名を先に決めてしまっていたので…）
+
+
+### packagist
+
+https://packagist.org/packages/kanagama/laravel-eloquent-method-expansion
+
 
 ## 使い方
 
-composer インストール
+composer でインストール
 
 ```bash
 composer require kanagama/laravel-eloquent-method-expansion
 ```
 
-インストール後、下記のメソッドが使えるようになります。
-
+インストール後、下記メソッドが使えるようになります。
 <br>
 
-## where句
 
-<br>
+## 拡張 where 句
 
-### where[columnName]IsNull, orWhere[columnName]IsNull
+※ **[columnName]** にはテーブルのカラム名をアッパーキャメルで入力します。
 
-where[columnName]IsNull メソッドは、columnName が NULL である条件を加えます。
+### where[columnName]IsNull(), orWhere[columnName]IsNull()
+
+where[columnName]IsNull() メソッドは、columnName が NULL である条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -31,12 +38,12 @@ $users = DB::table('users')
 
 # select * from users where name IS NULL;
 ```
-<br><br>
+<br>
 
 
-### where[columnName]IsNotNull, orWhere[columnName]IsNotNull
+### where[columnName]IsNotNull(), orWhere[columnName]IsNotNull()
 
-where[columnName]IsNull メソッドは、columnName が NULL でない条件を加えます。
+where[columnName]IsNull() メソッドは、columnName が NULL でない条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -45,13 +52,14 @@ $users = DB::table('users')
 
 # select * from users where name IS NOT NULL;
 ```
-<br><br>
+<br>
 
-[AllowEmptyオプション](#allowEmpty)
 
-### where[columnName]Eq, orWhere[columnName]Eq - (allowEmpty)
+### where[columnName]Eq(), orWhere[columnName]Eq()
 
-where[columnName]Eq　メソッドは、 パラメータの値が columnName の値と一致する条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Eq()　メソッドは、 パラメータの値が columnName の値と一致する条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -60,12 +68,14 @@ $users = DB::table('users')
 
 # select * from users where tel = '09099999999';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]NotEq, orWhere[columnName]NotEq - (allowEmpty)
+### where[columnName]NotEq(), orWhere[columnName]NotEq()
 
-where[columnName]NotEq メソッドは、 パラメータの値が columnName の値と一致しない条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]NotEq() メソッドは、 パラメータの値が columnName の値と一致しない条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -74,12 +84,14 @@ $users = DB::table('users')
 
 # select * from users where tel <> '09099999999';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Gt, orWhere[columnName]Gt - (allowEmpty)
+### where[columnName]Gt(), orWhere[columnName]Gt()
 
-where[columnName]Gt メソッドは、パラメータの値より大きい columnName の値となる条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Gt() メソッドは、パラメータの値より大きい columnName の値となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -88,12 +100,14 @@ $users = DB::table('users')
 
 # select * from users where created_at > '1980-05-21';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Gte, orWhere[columnName]Gte - (allowEmpty)
+### where[columnName]Gte(), orWhere[columnName]Gte()
 
-where[columnName]Gte メソッドは、パラメータの値以上の columnName の値となる条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Gte() メソッドは、パラメータの値以上の columnName の値となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -102,12 +116,14 @@ $users = DB::table('users')
 
 # select * from users where created_at >= '1980-05-21';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Lt, orWhere[columnName]Lt - (allowEmpty)
+### where[columnName]Lt(), orWhere[columnName]Lt()
 
-where[columnName]Lt メソッドは、パラメータの値より小さい columnName の値となる条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Lt() メソッドは、パラメータの値より小さい columnName の値となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -116,12 +132,14 @@ $users = DB::table('users')
 
 # select * from users where modified_at < '1980-05-21 00:00:00';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Lte, orWhere[columnName]Lte - (allowEmpty)
+### where[columnName]Lte(), orWhere[columnName]Lte()
 
-where[columnName]Lte メソッドは、パラメータの値以下の columnName の値となる条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Lte() メソッドは、パラメータの値以下の columnName の値となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -130,12 +148,14 @@ $users = DB::table('users')
 
 # select * from users where modified_at <= '1980-05-21 00:00:00';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]In, orWhere[columnName]In - (allowEmpty)
+### where[columnName]In(), orWhere[columnName]In()
 
-where[columnName]In メソッドは、指定した配列内に columnName の値が含まれる条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]In() メソッドは、指定した配列内に columnName の値が含まれる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -146,12 +166,14 @@ $users = DB::table('users')
 
 # select * from users where user_status_id in (1, 2, 3);
 ```
-<br><br>
+<br>
 
 
-### where[columnName]NotIn, orWhere[columnName]NotIn - (allowEmpty)
+### where[columnName]NotIn(), orWhere[columnName]NotIn()
 
-where[columnName]NotIn メソッドは、指定した配列内に columnName の値が含まれない条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]NotIn() メソッドは、指定した配列内に columnName の値が含まれない条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -162,10 +184,12 @@ $users = DB::table('users')
 
 # select * from users where user_status_id not in (1, 2, 3);
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Like, orWhere[columnName]Like - (allowEmpty)
+### where[columnName]Like(), orWhere[columnName]Like()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
 
 where[columnName]Like メソッドは、columName の値の中にパラメータの値が部分一致する条件を加えます。
 
@@ -176,12 +200,14 @@ $users = DB::table('users')
 
 # select * from users where address like '%沖縄県%';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]NotLike, orWhere[columnName]NotLike - (allowEmpty)
+### where[columnName]NotLike(), orWhere[columnName]NotLike()
 
-where[columnName]NotLike メソッドは、columName の値の中にパラメータの値が部分一致しない条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]NotLike() メソッドは、columName の値の中にパラメータの値が部分一致しない条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -190,12 +216,14 @@ $users = DB::table('users')
 
 # select * from users where address not like '%沖縄県%';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]LikePrefix, orWhere[columnName]LikePrefix - (allowEmpty)
+### where[columnName]LikePrefix(), orWhere[columnName]LikePrefix()
 
-where[columnName]LikePrefix メソッドは、columName の値の中にパラメータの値が前方一致する条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]LikePrefix() メソッドは、columName の値の中にパラメータの値が前方一致する条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -204,12 +232,14 @@ $users = DB::table('users')
 
 # select * from users where address like '沖縄県%';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]NotLikePrefix, orWhere[columnName]NotLikePrefix - (allowEmpty)
+### where[columnName]NotLikePrefix(), orWhere[columnName]NotLikePrefix()
 
-where[columnName]LikePrefix メソッドは、columName の値の中にパラメータの値が前方一致しない条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]LikePrefix() メソッドは、columName の値の中にパラメータの値が前方一致しない条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -218,12 +248,14 @@ $users = DB::table('users')
 
 # select * from users where address not like '沖縄県%';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]LikeBackword, orWhere[columnName]Backword - (allowEmpty)
+### where[columnName]LikeBackword(), orWhere[columnName]Backword()
 
-where[columnName]LikePrefix メソッドは、columName の値の中にパラメータの値が後方一致する条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]LikePrefix() メソッドは、columName の値の中にパラメータの値が後方一致する条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -232,10 +264,12 @@ $users = DB::table('users')
 
 # select * from users where address like '%沖縄県';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]NotLikeBackword, orWhere[columnName]NotBackword - (allowEmpty)
+### where[columnName]NotLikeBackword(), orWhere[columnName]NotBackword()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
 
 where[columnName]LikePrefix メソッドは、columName の値の中にパラメータの値が後方一致しない条件を加えます。
 
@@ -246,12 +280,15 @@ $users = DB::table('users')
 
 # select * from users where address not like '%沖縄県';
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Date, orWhere[columnName]Date - (allowEmpty)
+### where[columnName]Date(), orWhere[columnName]Date()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]Date メソッドは、columName の値と日付を比較できます。
+where[columnName]Date() メソッドは、columName の値と日付を比較できます。
 
 ```php
 $users = DB::table('users')
@@ -260,9 +297,12 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
-### where[columnName]DateGt, orWhere[columnName]DateGt - (allowEmpty)
+### where[columnName]DateGt(), orWhere[columnName]DateGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
 where[columnName]DateGt メソッドは、columName の値と日付を > で比較できます。
 
@@ -273,11 +313,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
-### where[columnName]DateGte, orWhere[columnName]DateGte - (allowEmpty)
+
+### where[columnName]DateGte(), orWhere[columnName]DateGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DateGte メソッドは、columName の値と日付を >= で比較できます。
+where[columnName]DateGte() メソッドは、columName の値と日付を >= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -286,12 +330,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DateLt, orWhere[columnName]DateLt - (allowEmpty)
+### where[columnName]DateLt(), orWhere[columnName]DateLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DateLt メソッドは、columName の値と日付を < で比較できます。
+where[columnName]DateLt() メソッドは、columName の値と日付を < で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -300,12 +347,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DateLte, orWhere[columnName]DateLte - (allowEmpty)
+### where[columnName]DateLte(), orWhere[columnName]DateLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DateLte メソッドは、columName の値と日付を <= で比較できます。
+where[columnName]DateLte() メソッドは、columName の値と日付を <= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -314,12 +364,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Month, orWhere[columnName]Month - (allowEmpty)
+### where[columnName]Month(), orWhere[columnName]Month()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]Month メソッドは、columName の値と特定の月を比較できます。
+where[columnName]Month() メソッドは、columName の値と特定の月を比較できます。
 
 ```php
 $users = DB::table('users')
@@ -328,12 +381,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]MonthGt, orWhere[columnName]MonthGt - (allowEmpty)
+### where[columnName]MonthGt(), orWhere[columnName]MonthGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]MonthGt メソッドは、columName の値と特定の月を > で比較できます。
+where[columnName]MonthGt() メソッドは、columName の値と特定の月を > で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -342,12 +398,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]MonthGte, orWhere[columnName]MonthGte - (allowEmpty)
+### where[columnName]MonthGte(), orWhere[columnName]MonthGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]MonthGte メソッドは、columName の値と特定の月を >= で比較できます。
+where[columnName]MonthGte() メソッドは、columName の値と特定の月を >= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -356,12 +415,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]MonthLt, orWhere[columnName]MonthLt - (allowEmpty)
+### where[columnName]MonthLt(), orWhere[columnName]MonthLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]MonthLt メソッドは、columName の値と特定の月を < で比較できます。
+where[columnName]MonthLt() メソッドは、columName の値と特定の月を < で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -370,12 +432,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]MonthLte, orWhere[columnName]MonthLte - (allowEmpty)
+### where[columnName]MonthLte(), orWhere[columnName]MonthLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]MonthLte メソッドは、columName の値と特定の月を <= で比較できます。
+where[columnName]MonthLte() メソッドは、columName の値と特定の月を <= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -384,12 +449,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Day, orWhere[columnName]Day - (allowEmpty)
+### where[columnName]Day(), orWhere[columnName]Day()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]Day メソッドは、columName の値と特定の日を比較できます。
+where[columnName]Day() メソッドは、columName の値と特定の日を比較できます。
 
 ```php
 $users = DB::table('users')
@@ -398,12 +466,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DayGt, orWhere[columnName]DayGt - (allowEmpty)
+### where[columnName]DayGt(), orWhere[columnName]DayGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DayGt メソッドは、columName の値と特定の日を > で比較できます。
+where[columnName]DayGt() メソッドは、columName の値と特定の日を > で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -412,12 +483,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DayGte, orWhere[columnName]DayGte - (allowEmpty)
+### where[columnName]DayGte(), orWhere[columnName]DayGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DayGte メソッドは、columName の値と特定の日を >= で比較できます。
+where[columnName]DayGte() メソッドは、columName の値と特定の日を >= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -426,12 +500,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DayLt, orWhere[columnName]DayLt - (allowEmpty)
+### where[columnName]DayLt(), orWhere[columnName]DayLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DayLt メソッドは、columName の値と特定の日を < で比較できます。
+where[columnName]DayLt() メソッドは、columName の値と特定の日を < で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -440,12 +517,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]DayLte, orWhere[columnName]DayLte - (allowEmpty)
+### where[columnName]DayLte(), orWhere[columnName]DayLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]DayLte メソッドは、columName の値と特定の日を <= で比較できます。
+where[columnName]DayLte() メソッドは、columName の値と特定の日を <= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -454,12 +534,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Year, orWhere[columnName]Year - (allowEmpty)
+### where[columnName]Year(), orWhere[columnName]Year()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]Year メソッドは、columName の値と特定の年を比較できます。
+where[columnName]Year() メソッドは、columName の値と特定の年を比較できます。
 
 ```php
 $users = DB::table('users')
@@ -468,12 +551,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]YearGt, orWhere[columnName]YearGt - (allowEmpty)
+### where[columnName]YearGt(), orWhere[columnName]YearGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]YearGt メソッドは、columName の値と特定の年を > で比較できます。
+where[columnName]YearGt() メソッドは、columName の値と特定の年を > で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -482,12 +568,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]YearGte, orWhere[columnName]YearGte - (allowEmpty)
+### where[columnName]YearGte(), orWhere[columnName]YearGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]YearGte メソッドは、columName の値と特定の年を >= で比較できます。
+where[columnName]YearGte() メソッドは、columName の値と特定の年を >= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -496,12 +585,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]YearLt, orWhere[columnName]YearLt - (allowEmpty)
+### where[columnName]YearLt(), orWhere[columnName]YearLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]YearLt メソッドは、columName の値と特定の年を < で比較できます。
+where[columnName]YearLt() メソッドは、columName の値と特定の年を < で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -510,12 +602,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]YearLte, orWhere[columnName]YearLte - (allowEmpty)
+### where[columnName]YearLte(), orWhere[columnName]YearLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]YearLte メソッドは、columName の値と特定の年を <= で比較できます。
+where[columnName]YearLte() メソッドは、columName の値と特定の年を <= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -524,12 +619,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Time, orWhere[columnName]Time - (allowEmpty)
+### where[columnName]Time(), orWhere[columnName]Time()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]Time メソッドは、columName の値と特定の時間を比較できます。
+where[columnName]Time() メソッドは、columName の値と特定の時間を比較できます。
 
 ```php
 $users = DB::table('users')
@@ -538,12 +636,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]TimeGt, orWhere[columnName]TimeGt - (allowEmpty)
+### where[columnName]TimeGt(), orWhere[columnName]TimeGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]TimeGt メソッドは、columName の値と特定の時間を > で比較できます。
+where[columnName]TimeGt() メソッドは、columName の値と特定の時間を > で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -552,12 +653,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]TimeGte, orWhere[columnName]TimeGte - (allowEmpty)
+### where[columnName]TimeGte(), orWhere[columnName]TimeGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]TimeGte メソッドは、columName の値と特定の時間を >= で比較できます。
+where[columnName]TimeGte() メソッドは、columName の値と特定の時間を >= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -566,12 +670,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]TimeLt, orWhere[columnName]TimeLt - (allowEmpty)
+### where[columnName]TimeLt(), orWhere[columnName]TimeLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]TimeLt メソッドは、columName の値と特定の時間を < で比較できます。
+where[columnName]TimeLt() メソッドは、columName の値と特定の時間を < で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -580,12 +687,15 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]TimeLte, orWhere[columnName]TimeLte - (allowEmpty)
+### where[columnName]TimeLte(), orWhere[columnName]TimeLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]TimeLte メソッドは、columName の値と特定の時間を <= で比較できます。
+where[columnName]TimeLte() メソッドは、columName の値と特定の時間を <= で比較できます。
 
 ```php
 $users = DB::table('users')
@@ -594,12 +704,14 @@ $users = DB::table('users')
 
 #
 ```
-<br><br>
+<br>
 
 
-### where[columnName]Column, orWhere[columnName]Column - (allowEmpty)
+### where[columnName]Column(), orWhere[columnName]Column()
 
-where[columnName]Column メソッドは、columnName と指定したカラムが等しい条件を加えます。
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Column() メソッドは、columnName と指定したカラムが等しい条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -608,12 +720,15 @@ $users = DB::table('users')
 
 # select * from users where rent_date = return_date;
 ```
-<br><br>
+<br>
 
 
-### where[columnName]ColumnGt, orWhere[columnName]ColumnGt - (allowEmpty)
+### where[columnName]ColumnGt(), orWhere[columnName]ColumnGt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]ColumnGt メソッドは、columnName が指定したカラムより大きい条件を加えます。
+where[columnName]ColumnGt() メソッドは、columnName が指定したカラムより大きい条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -622,12 +737,15 @@ $users = DB::table('users')
 
 # select * from users where rent_date > return_date;
 ```
-<br><br>
+<br>
 
 
-### where[columnName]ColumnGte, orWhere[columnName]ColumnGte - (allowEmpty)
+### where[columnName]ColumnGte(), orWhere[columnName]ColumnGte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]ColumnGt メソッドは、columnName が指定したカラム以上となる条件を加えます。
+where[columnName]ColumnGt() メソッドは、columnName が指定したカラム以上となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -636,12 +754,15 @@ $users = DB::table('users')
 
 # select * from users where rent_date >= return_date;
 ```
-<br><br>
+<br>
 
 
-### where[columnName]ColumnLt, orWhere[columnName]ColumnLt - (allowEmpty)
+### where[columnName]ColumnLt(), orWhere[columnName]ColumnLt()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]ColumnLt メソッドは、columnName が指定したカラムより小さい条件を加えます。
+where[columnName]ColumnLt() メソッドは、columnName が指定したカラムより小さい条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -650,12 +771,15 @@ $users = DB::table('users')
 
 # select * from users where rent_date < return_date;
 ```
-<br><br>
+<br>
 
 
-### where[columnName]ColumnLte, orWhere[columnName]ColumnLte - (allowEmpty)
+### where[columnName]ColumnLte(), orWhere[columnName]ColumnLte()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
 <!-- TODO -->
-where[columnName]ColumnLte メソッドは、columnName が指定したカラム以下となる条件を加えます。
+where[columnName]ColumnLte() メソッドは、columnName が指定したカラム以下となる条件を加えます。
 
 ```php
 $users = DB::table('users')
@@ -664,11 +788,13 @@ $users = DB::table('users')
 
 # select * from users where rent_date <= return_date;
 ```
-<br><br>
+<br>
 
-### where[columnName]Between, orWhere[columnName]Between - (allowEmpty)
+### where[columnName]Between(), orWhere[columnName]Between()
 
-where[columnName]Between メソッドは、columnName の値が２つの値の間にある条件を加えます
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]Between() メソッドは、columnName の値が２つの値の間にある条件を加えます
 
 ```php
 $users = DB::table('users')
@@ -677,11 +803,14 @@ $users = DB::table('users')
 
 # select * from users where created_at between '2022-12-01' AND '2022-12-10'
 ```
-<br><br>
+<br>
 
-### where[columnName]NotBetween, orWhere[columnName]NotBetween - (allowEmpty)
 
-where[columnName]NotBetween メソッドは、columnName の値が２つの値の間にある条件を加えます
+### where[columnName]NotBetween(), orWhere[columnName]NotBetween()
+
+※ [AllowEmpty](#allowEmpty) オプション対応
+
+where[columnName]NotBetween() メソッドは、columnName の値が２つの値の間にある条件を加えます
 
 ```php
 $users = DB::table('users')
@@ -690,16 +819,15 @@ $users = DB::table('users')
 
 # select * from users where created_at not between '2022-12-01' AND '2022-12-10'
 ```
-<br><br>
+<br>
 
 
+### allowEmpty
 
-## allowEmpty
-
-allowEmptyオプション
+**allowEmpty**オプション
 
 
-where の後に AllowEmpty オプションを付与すると、パラメータが null や [] となる場合にその条件を省略する。
+where の後に **AllowEmpty** オプションを付与すると、パラメータが null や [] となる場合にその条件を省略する。
 
 ```php
 # $rentDatetime = null;
@@ -713,7 +841,50 @@ $users = DB::table('users')
 # select * from users where return_datetime >= '1980-05-21 00:00:00';
 ```
 
-※ AllowEmpty オプション利用不可
+
+#### allowEmpty の使い所
+
+管理画面（※予約管理画面など）では、予約者名、予約日、メールアドレス、電話番号、予約ステータス、その他多岐にわたる絞り込み条件が用意されていると思いますが、それを Eloquent で書くのは意外と労力が掛かります。
+
+```php
+$query = DB::table('reservations');
+
+# 絞り込み条件がリクエストパラメータに存在しているかチェックして where に追加しないといけない
+if ($request->reserve_name) {
+    $query->where('reservations.name', 'LIKE', '%'. $request->reserve_name . '%');
+}
+if ($request->reserve_date) {
+    $query->whereDate('reservations.reserve_date_at', $request->reserve_date);
+}
+if ($request->email) {
+    $query->whereEmail($request->email);
+}
+if ($request->tel) {
+    $query->whereTel($request->tel);
+}
+if ($request->status) {
+    $query->whereStatus($request->status);
+}
+// 絞り込み条件の数だけ続く
+```
+
+
+全部 if 文で囲むとかそんなんやってらんないよ、と思った際に使うのが **AllowEmpty** オプションです。
+
+null や [] が渡された場合、その絞り込み条件を省略しますので、メソッドチェーンで where() を全て繋げることが可能です。
+
+```php
+return DB::table('reservations');
+    ->whereAllowEmptyNameLike($request->reserve_name)
+    ->whereAllowEmptyReserveDateAtDate($request->reserve_date)
+    ->whereAllowEmptyEmailEq($request->email)
+    ->whereAllowEmptyTelEq($request->tel)
+    ->whereAllowEmptyStatusEq($request->status)
+    ->get();
+```
+
+#### AllowEmpty オプション利用不可
+
 - where[columnName]IsNull()
 - orWhere[columnName]IsNull()
 - where[columnName]Null()
@@ -722,5 +893,3 @@ $users = DB::table('users')
 - orWhere[columnName]NotNull()
 - where[columnName]IsNotNull()
 - orWhere[columnName]IsNotNull()
-
-<br><br>

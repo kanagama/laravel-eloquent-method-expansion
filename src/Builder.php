@@ -59,11 +59,11 @@ class Builder extends BaseBuilder
         }
 
         if (str_starts_with($method, 'where')) {
-            $columnName = Str::snake(str_replace(['whereAllowEmpty', 'where', $expression,], '', $method));
+            $columnName = $this->getColumnName($method, $expression, 'whereAllowEmpty', 'where');
             $method = 'where' . $expression;
         }
         if (str_starts_with($method, 'orWhere')) {
-            $columnName = Str::snake(str_replace(['orWhereAllowEmpty', 'orWhere', $expression,], '', $method));
+            $columnName = $this->getColumnName($method, $expression, 'orWhereAllowEmpty', 'orWhere');
             $method = 'orWhere' . $expression;
         }
 
@@ -81,6 +81,33 @@ class Builder extends BaseBuilder
         }
 
         return parent::__call($method, $parameters);
+    }
+
+    /**
+     * メソッド名からカラム名を取得する
+     *
+     * @param  string  $method
+     * @param  string  $extension
+     * @return string
+     */
+    private function getColumnName($method, $extension, $prefix1, $prefix2)
+    {
+        $backwordLength = strrpos($method, $extension);
+        if ($backwordLength) {
+            $method = substr($method, 0, $backwordLength);
+        }
+
+        $prefixLength = strpos($method, $prefix1);
+        if ($prefixLength !== false) {
+            $method = substr($method, strlen($prefix1), strlen($method));
+        }
+
+        $prefixLength = strpos($method, $prefix2);
+        if ($prefixLength !== false) {
+            $method = substr($method, strlen($prefix2), strlen($method));
+        }
+
+        return Str::snake($method);
     }
 
     /**
