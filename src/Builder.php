@@ -51,30 +51,31 @@ class Builder extends BaseBuilder
             &&
             $this->checkAllowEmpty($parameters)
         ) {
-            // AllowEmpty で null チェックはできない
+            // AllowEmpty オプションで null チェックはできない
             if (str_ends_with($method, 'Null')) {
                 throw new BadMethodCallException('No such method: ' . $method);
             }
             return $this;
         }
 
-        // where が先頭
         if (str_starts_with($method, 'where')) {
             $columnName = Str::snake(str_replace(['whereAllowEmpty', 'where', $expression,], '', $method));
             $method = 'where' . $expression;
         }
-        // where が先頭
         if (str_starts_with($method, 'orWhere')) {
             $columnName = Str::snake(str_replace(['orWhereAllowEmpty', 'orWhere', $expression,], '', $method));
             $method = 'orWhere' . $expression;
         }
 
-        // 既存メソッドであればそのまま実行する
+        // 既存メソッドであればそのまま実行
         if (method_exists($this, $method)) {
-            $requestParameters = (count($parameters) === 1) ? $parameters[0] : $parameters;
+            $requestParameters = (count($parameters) === 1)
+                                    ? $parameters[0]
+                                    : $parameters;
             return $this->{$method}($columnName, $requestParameters);
         }
 
+        // where, orWhere が先頭の場合はカラム名をパラメータに追加
         if (!empty($columnName)) {
             array_unshift($parameters, $columnName);
         }
