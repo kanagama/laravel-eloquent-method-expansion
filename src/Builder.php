@@ -6,6 +6,9 @@ use BadMethodCallException;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Str;
 
+/**
+ * @author k-nagama <k.nagama0632@gmail.com>
+ */
 class Builder extends BaseBuilder
 {
     /**
@@ -48,6 +51,10 @@ class Builder extends BaseBuilder
             &&
             $this->checkAllowEmpty($parameters)
         ) {
+            // AllowEmpty で null チェックはできない
+            if (str_ends_with($method, 'Null')) {
+                throw new BadMethodCallException('No such method: ' . $method);
+            }
             return $this;
         }
 
@@ -64,9 +71,6 @@ class Builder extends BaseBuilder
 
         // 既存メソッドであればそのまま実行する
         if (method_exists($this, $method)) {
-            // if (in_array($method, ['whereColumn',])) {
-            //     return $this->{$method}($columnName, $parameters[0]);
-            // }
             $requestParameters = (count($parameters) === 1) ? $parameters[0] : $parameters;
             return $this->{$method}($columnName, $requestParameters);
         }
@@ -106,11 +110,7 @@ class Builder extends BaseBuilder
         }
 
         foreach ($parameters as $parameter) {
-            if (
-                (is_array($parameter) && !empty($parameter))
-                ||
-                !is_null($parameter)
-            ) {
+            if (!empty($parameter)) {
                 return false;
             }
         }
