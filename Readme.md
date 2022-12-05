@@ -919,7 +919,7 @@ orderBy[columnName]Desc() メソッドは、columnName の降順で並び替え�
 
 ```php
 $users = DB::table('users')
-            ->orderByCreatedAtAsc()
+            ->orderByCreatedAtDesc()
             ->get();
 
 # select * from users order by created_at desc
