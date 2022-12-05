@@ -557,5 +557,35 @@ class EloquentMethodExpansionServiceProvider extends ServiceProvider
         Builder::macro('orWhereTimeLte', function ($column, $value): Builder {
             return $this->whereTime($column, '<=', $value, 'or');
         });
+
+        /**
+         * ->orderByAsc($column, $value)
+         */
+        Builder::macro('orderByAsc', function ($column): Builder {
+            return $this->orderBy($column, 'asc');
+        });
+
+        /**
+         * ->orderByDesc($column, $value)
+         */
+        Builder::macro('orderByDesc', function ($column): Builder {
+            return $this->orderBy($column, 'desc');
+        });
+
+        /**
+         * ->orderByFieldDesc(string $column, array $values)
+         */
+        Builder::macro('orderByField', function (string $column, array $values): Builder {
+            // 文字列の場合はシングルコーテーションで囲む
+            $quote = "'";
+            foreach ($values as $value) {
+                if (is_string($value)) {
+                    $quote = "'";
+                    break;
+                }
+            }
+
+            return $this->orderByRaw("FIELD({$column}, {$quote}" . implode("{$quote},{$quote}", array_reverse($values)) . "') DESC");
+        });
     }
 }

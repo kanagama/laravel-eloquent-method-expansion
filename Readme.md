@@ -8,8 +8,8 @@ Eloquent を拡張し、メソッドを追加します。
 
 ### packagist
 
-https://packagist.org/packages/kanagama/laravel-eloquent-method-expansion
 
+https://packagist.org/packages/kanagama/laravel-eloquent-method-expansion
 
 ## 使い方
 
@@ -22,8 +22,7 @@ composer require kanagama/laravel-eloquent-method-expansion
 インストール後、下記メソッドが使えるようになります。
 <br>
 
-
-## 拡張 where 句
+## 拡張 where句
 
 ※ **[columnName]** にはテーブルのカラム名をアッパーキャメルで入力します。
 
@@ -298,6 +297,7 @@ $users = DB::table('users')
 #
 ```
 <br>
+
 
 ### where[columnName]DateGt(), orWhere[columnName]DateGt()
 
@@ -790,6 +790,7 @@ $users = DB::table('users')
 ```
 <br>
 
+
 ### where[columnName]Between(), orWhere[columnName]Between()
 
 ※ [AllowEmpty](#allowEmpty) オプション対応
@@ -893,3 +894,48 @@ return DB::table('reservations');
 - orWhere[columnName]NotNull()
 - where[columnName]IsNotNull()
 - orWhere[columnName]IsNotNull()
+<br>
+
+
+## 拡張 orderBy 句
+
+### orderBy[columnName]Asc()
+
+orderBy[columnName]Asc() メソッドは、columnName の昇順で並び替えます。
+
+```php
+$users = DB::table('users')
+            ->orderByCreatedAtAsc()
+            ->get();
+
+# select * from users order by created_at asc
+```
+<br>
+
+
+### orderBy[columName]Desc()
+
+orderBy[columnName]Desc() メソッドは、columnName の降順で並び替えます。
+
+```php
+$users = DB::table('users')
+            ->orderByCreatedAtAsc()
+            ->get();
+
+# select * from users order by created_at desc
+```
+<br>
+
+
+### orderBy[columnName]Field()
+
+orderBy[columnName]Field() メソッドは、columnName の指定した順番で並び替えます
+null を末尾に配置するため、Desc が付与されます。
+
+```php
+$users = DB::table('users')
+            ->orderByIdField([2, 1, 4, 3,])
+            ->get();
+
+# select * from users order by FIELD(id, 3, 4, 1, 2) DESC;
+```

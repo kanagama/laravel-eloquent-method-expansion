@@ -62,6 +62,97 @@ class EloquentMethodExpansionUnitTest extends TestCase
     }
 
     /**
+     * 数値型がパラメータとして渡されても並び替えが可能
+     *
+     * @test
+     */
+    public function orderByField()
+    {
+        $areas = $this->area
+            ->orderByViewFlgField([1, 0, 2,])
+            ->get();
+
+        foreach ($areas as $area) {
+            $this->assertSame($area->view_flg, 1);
+            break;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * 文字列がパラメータとして渡されても並び替えが可能
+     *
+     * @test
+     */
+    public function orderByField()
+    {
+        $areas = $this->area
+            ->orderByNameField([
+                'ひめゆり通り',
+                '知念岬',
+                '那覇バスターミナル',
+                'おもろまち',
+            ])
+            ->get();
+
+        foreach ($areas as $area) {
+            $this->assertSame($area->name, 'ひめゆり通り');
+            break;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function orderByAsc()
+    {
+        $areas = $this->area
+            ->orderByViewFlgAsc()
+            ->get();
+
+        $beforeViewFlg = null;
+        foreach ($areas as $area) {
+            if (!is_null($beforeViewFlg)) {
+                $this->assertTrue(
+                    is_null($area->view_flg)
+                    ||
+                    $area->view_flg > $beforeViewFlg
+                );
+            }
+            $beforeViewFlg = $area->view_flg;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function orderByDesc()
+    {
+        $areas = $this->area
+            ->orderByViewFlgDesc()
+            ->get();
+
+        $beforeViewFlg = null;
+        foreach ($areas as $area) {
+            if (!is_null($beforeViewFlg)) {
+                $this->assertTrue(
+                    is_null($area->view_flg)
+                    ||
+                    $area->view_flg < $beforeViewFlg
+                );
+            }
+            $beforeViewFlg = $area->view_flg;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
      * @test
      */
     public function whereRawDefault()
