@@ -64,6 +64,71 @@ class EloquentMethodExpansionUnitTest extends TestCase
     /**
      * @test
      */
+    public function orderByField()
+    {
+        $areas = $this->area
+            ->orderByViewFlgField([1, 0, 2,])
+            ->get();
+
+        foreach ($areas as $area) {
+            $this->assertSame($area->view_flg, 1);
+            break;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function orderByAsc()
+    {
+        $areas = $this->area
+            ->orderByViewFlgAsc()
+            ->get();
+
+        $beforeViewFlg = null;
+        foreach ($areas as $area) {
+            if (!is_null($beforeViewFlg)) {
+                $this->assertTrue(
+                    is_null($area->view_flg)
+                    ||
+                    $area->view_flg > $beforeViewFlg
+                );
+            }
+            $beforeViewFlg = $area->view_flg;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function orderByDesc()
+    {
+        $areas = $this->area
+            ->orderByViewFlgDesc()
+            ->get();
+
+        $beforeViewFlg = null;
+        foreach ($areas as $area) {
+            if (!is_null($beforeViewFlg)) {
+                $this->assertTrue(
+                    is_null($area->view_flg)
+                    ||
+                    $area->view_flg < $beforeViewFlg
+                );
+            }
+            $beforeViewFlg = $area->view_flg;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * @test
+     */
     public function whereRawDefault()
     {
         $areas = $this->area

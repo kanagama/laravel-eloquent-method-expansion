@@ -12,9 +12,11 @@ use Illuminate\Support\Str;
 class Builder extends BaseBuilder
 {
     /**
-     * 後方一致（順番大事）
+     * where() 後方一致（順番大事）
+     *
+     * @var array
      */
-    private const BACKWORD_EXTENSION = [
+    private const WHERE_BACKWORD_EXTENSION = [
         'ColumnGte', 'ColumnGt', 'ColumnLte', 'ColumnLt', 'Column',
         'DateGte', 'DateGt', 'DateLte', 'DateLt', 'Date',
         'YearGte', 'YearGt', 'YearLte', 'YearLt', 'Year',
@@ -32,6 +34,15 @@ class Builder extends BaseBuilder
     ];
 
     /**
+     * orderBy 後方一致
+     *
+     * @var array
+     */
+    private const ORDER_BY_BACKWORD_EXTENSION = [
+        'Asc', 'Desc', 'Field',
+    ];
+
+    /**
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
@@ -40,8 +51,9 @@ class Builder extends BaseBuilder
      */
     public function __call($method, $parameters)
     {
-        $expression = $this->checkBackwordExpression($method);
-        if (!$expression) {
+        $whereExpression = $this->checkWhereBackwordExpression($method);
+        $orderByExpression = $this->checkOrderByBackwordExpression($method);
+        if (!$whereExpression && !$orderByExpression) {
             return parent::__call($method, $parameters);
         }
 
@@ -58,13 +70,24 @@ class Builder extends BaseBuilder
             return $this;
         }
 
-        if (str_starts_with($method, 'where')) {
-            $columnName = $this->getColumnName($method, $expression, 'whereAllowEmpty', 'where');
-            $method = 'where' . $expression;
+        if ($whereExpression) {
+            if (str_starts_with($method, 'where')) {
+                $columnName = $this->getColumnName($method, $whereExpression, 'whereAllowEmpty', 'where');
+                $method = 'where' . $whereExpression;
+            }
+            if (str_starts_with($method, 'orWhere')) {
+                $columnName = $this->getColumnName($method, $whereExpression, 'orWhereAllowEmpty', 'orWhere');
+                $method = 'orWhere' . $whereExpression;
+            }
         }
-        if (str_starts_with($method, 'orWhere')) {
-            $columnName = $this->getColumnName($method, $expression, 'orWhereAllowEmpty', 'orWhere');
-            $method = 'orWhere' . $expression;
+        if ($orderByExpression) {
+            if (str_starts_with($method, 'orderBy')) {
+                $columnName = $this->getColumnName($method, $orderByExpression, 'orderBy');
+                $method = 'orderBy' . $orderByExpression;
+                $parameters += [
+                    $orderByExpression,
+                ];
+            }
         }
 
         // 既存メソッドであればそのまま実行
@@ -90,7 +113,7 @@ class Builder extends BaseBuilder
      * @param  string  $extension
      * @return string
      */
-    private function getColumnName($method, $extension, $prefix1, $prefix2)
+    private function getColumnName($method, $extension, $prefix1, $prefix2 = '')
     {
         $backwordLength = strrpos($method, $extension);
         if ($backwordLength) {
@@ -102,9 +125,11 @@ class Builder extends BaseBuilder
             $method = substr($method, strlen($prefix1), strlen($method));
         }
 
-        $prefixLength = strpos($method, $prefix2);
-        if ($prefixLength !== false) {
-            $method = substr($method, strlen($prefix2), strlen($method));
+        if ($prefix2) {
+            $prefixLength = strpos($method, $prefix2);
+            if ($prefixLength !== false) {
+                $method = substr($method, strlen($prefix2), strlen($method));
+            }
         }
 
         return Str::snake($method);
@@ -114,9 +139,24 @@ class Builder extends BaseBuilder
      * @param  string  $method
      * @return string
      */
-    private function checkBackwordExpression($method)
+    private function checkWhereBackwordExpression($method)
     {
-        foreach (self::BACKWORD_EXTENSION as $expression) {
+        foreach (self::WHERE_BACKWORD_EXTENSION as $expression) {
+            if (str_ends_with($method, $expression)) {
+                return $expression;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  string  $method
+     * @return string
+     */
+    private function checkOrderByBackwordExpression($method)
+    {
+        foreach (self::ORDER_BY_BACKWORD_EXTENSION as $expression) {
             if (str_ends_with($method, $expression)) {
                 return $expression;
             }
