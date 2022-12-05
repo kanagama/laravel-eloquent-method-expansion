@@ -576,7 +576,16 @@ class EloquentMethodExpansionServiceProvider extends ServiceProvider
          * ->orderByFieldDesc(string $column, array $values)
          */
         Builder::macro('orderByField', function (string $column, array $values): Builder {
-            return $this->orderByRaw('FIELD(' . $column . ', ' . implode(',', array_reverse($values)) . ') DESC');
+            // 文字列の場合はシングルコーテーションで囲む
+            $quote = "'";
+            foreach ($values as $value) {
+                if (is_string($value)) {
+                    $quote = "'";
+                    break;
+                }
+            }
+
+            return $this->orderByRaw("FIELD({$column}, {$quote}" . implode("{$quote},{$quote}", array_reverse($values)) . "') DESC");
         });
     }
 }

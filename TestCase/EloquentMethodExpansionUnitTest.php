@@ -62,6 +62,8 @@ class EloquentMethodExpansionUnitTest extends TestCase
     }
 
     /**
+     * 数値型がパラメータとして渡されても並び替えが可能
+     *
      * @test
      */
     public function orderByField()
@@ -72,6 +74,30 @@ class EloquentMethodExpansionUnitTest extends TestCase
 
         foreach ($areas as $area) {
             $this->assertSame($area->view_flg, 1);
+            break;
+        }
+
+        $this->assertCount(4, $areas);
+    }
+
+    /**
+     * 文字列がパラメータとして渡されても並び替えが可能
+     *
+     * @test
+     */
+    public function orderByField()
+    {
+        $areas = $this->area
+            ->orderByNameField([
+                'ひめゆり通り',
+                '知念岬',
+                '那覇バスターミナル',
+                'おもろまち',
+            ])
+            ->get();
+
+        foreach ($areas as $area) {
+            $this->assertSame($area->name, 'ひめゆり通り');
             break;
         }
 
