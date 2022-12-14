@@ -14,6 +14,7 @@ class Product extends Model
         'discontinued',
         'sale_date_start',
         'sale_date_end',
+        'date',
         'created_at',
         'updated_at',
     ];
