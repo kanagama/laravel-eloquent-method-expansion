@@ -85,7 +85,7 @@ class EloquentMethodExpansionUnitTest extends TestCase
      *
      * @test
      */
-    public function orderByField()
+    public function orderByFieldString()
     {
         $areas = $this->area
             ->orderByNameField([
@@ -3771,5 +3771,42 @@ class EloquentMethodExpansionUnitTest extends TestCase
         }
 
         $this->assertCount(3, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function allowEmptyオプションにintの0を渡しても省略しない()
+    {
+        $areas = $this->area
+            ->whereAllowEmptyViewFlgEq(0)
+            ->get();
+
+        $this->assertCount(1, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function allowEmptyオプションにstringの0を渡しても省略しない()
+    {
+        $areas = $this->area
+            ->whereAllowEmptyViewFlgEq('0')
+            ->get();
+
+        $this->assertCount(1, $areas);
+    }
+
+    /**
+     * @test
+     */
+    public function allowEmptyオプションに空の配列を渡すとその条件を省略する()
+    {
+        $areas = $this->area
+            ->whereAllowEmptyViewFlgEq('0')
+            ->whereAllowEmptyNameIn([])
+            ->get();
+
+        $this->assertCount(1, $areas);
     }
 }

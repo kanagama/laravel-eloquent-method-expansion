@@ -178,7 +178,7 @@ class Builder extends BaseBuilder
         }
 
         foreach ($parameters as $parameter) {
-            if (!empty($parameter)) {
+            if (!empty($parameter) || is_numeric($parameter)) {
                 return false;
             }
         }

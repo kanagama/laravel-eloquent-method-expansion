@@ -27,6 +27,7 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
             'discontinued'    => 0,
             'sale_date_start' => '2022-06-15 00:00:00',
             'sale_date_end'   => '2022-09-25 00:00:00',
+            'date'            => '2022-05-21 00:00:00',
             'created_at'      => '2022-01-01 00:00:00',
             'updated_at'      => '2022-01-01 00:00:00',
         ]);
@@ -41,6 +42,16 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
     public function columNameの一部にexpressionが含まれていても正しいcolumnNameを取得できる()
     {
         $products = $this->product->whereSaleDateStartDate('2022-06-15')->get();
+
+        $this->assertCount(1, $products);
+    }
+
+    /**
+     * @test
+     */
+    public function columNameがexpressionと重複した名称でも正しいcolumnNameを取得できる()
+    {
+        $products = $this->product->whereDateDate('2022-05-21')->get();
 
         $this->assertCount(1, $products);
     }
