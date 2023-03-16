@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace Kanagama\EloquentExpansion\Tests\Unit;
 
-use Kanagama\EloquentExpansion\Models\Product;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
+use Kanagama\EloquentExpansion\Tests\Models\Product;
+use Kanagama\EloquentExpansion\Tests\TestCase;
 
 /**
  * @author k-nagama <k.nagama0632@gmail.com>

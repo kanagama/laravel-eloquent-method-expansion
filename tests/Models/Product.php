@@ -1,6 +1,6 @@
 <?php
 
-namespace Kanagama\EloquentExpansion\Models;
+namespace Kanagama\EloquentExpansion\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
