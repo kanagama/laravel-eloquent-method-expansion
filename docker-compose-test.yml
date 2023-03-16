@@ -9,66 +9,82 @@ services:
       - 13306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: tests
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
-      DB_HOST: mysql80_eloquent_expansion
-    # 永続化は不要
-    # volumes:
-    #   - ./mysql_data:/var/lib/mysql
+    tmpfs:
+      - /var/lib/mysql
     volumes:
-      # - ./.docker/conf/my.cnf:/etc/mysql/my.cnf
-      # 起動時にSQLを実行する
-      - ./.docker/mysql-init:/docker-entrypoint-initdb.d
+      - ./.docker/multi-mysql-init:/docker-entrypoint-initdb.d
+      - ./.docker/mysql-init:/sql
 
-  # php74_eloquent_expansion:
-  #   container_name: php74_eloquent_expansion
-  #   build:
-  #     context: .
-  #     dockerfile: ./.docker/dockerfile/PHP74_Dockerfile
-  #   volumes:
-  #     - .:/var/www/html
-  #   init: true
-  #   # restart: unless-stopped
-  #   command: ./.docker/command/test.sh
-  #   depends_on:
-  #     - mysql80_eloquent_expansion
+  php74_eloquent_expansion:
+    container_name: php74_eloquent_expansion
+    build:
+      context: .
+      dockerfile: ./.docker/dockerfile/PHP74_Dockerfile
+    environment:
+      DB_HOST: mysql80_eloquent_expansion
+      DB_DATABASE: tests74
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - .:/var/www/html
+    init: true
+    # restart: unless-stopped
+    command: ./.docker/command/test.sh
+    depends_on:
+      - mysql80_eloquent_expansion
 
-  # php80_eloquent_expansion:
-  #   container_name: php80_eloquent_expansion
-  #   build:
-  #     context: .
-  #     dockerfile: ./.docker/dockerfile/PHP80_Dockerfile
-  #   volumes:
-  #     - .:/var/www/html
-  #   init: true
-  #   # restart: unless-stopped
-  #   command: ./.docker/command/test.sh
-  #   depends_on:
-  #     - php74_eloquent_expansion
+  php80_eloquent_expansion:
+    container_name: php80_eloquent_expansion
+    build:
+      context: .
+      dockerfile: ./.docker/dockerfile/PHP80_Dockerfile
+    environment:
+      DB_HOST: mysql80_eloquent_expansion
+      DB_DATABASE: tests80
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - .:/var/www/html
+    init: true
+    # restart: unless-stopped
+    command: ./.docker/command/test.sh
+    depends_on:
+      - php74_eloquent_expansion
 
-  # php81_eloquent_expansion:
-  #   container_name: php81_eloquent_expansion
-  #   build:
-  #     context: .
-  #     dockerfile: ./.docker/dockerfile/PHP81_Dockerfile
-  #   volumes:
-  #     - .:/var/www/html
-  #   init: true
-  #   # restart: unless-stopped
-  #   command: ./.docker/command/test.sh
-  #   depends_on:
-  #     - php80_eloquent_expansion
+  php81_eloquent_expansion:
+    container_name: php81_eloquent_expansion
+    build:
+      context: .
+      dockerfile: ./.docker/dockerfile/PHP81_Dockerfile
+    environment:
+      DB_HOST: mysql80_eloquent_expansion
+      DB_DATABASE: tests81
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - .:/var/www/html
+    init: true
+    # restart: unless-stopped
+    command: ./.docker/command/test.sh
+    depends_on:
+      - php80_eloquent_expansion
 
-  # php82_eloquent_expansion:
-  #   container_name: php82_eloquent_expansion
-  #   build:
-  #     context: .
-  #     dockerfile: ./.docker/dockerfile/PHP82_Dockerfile
-  #   volumes:
-  #     - .:/var/www/html
-  #   init: true
-  #   # restart: unless-stopped
-  #   command: ./.docker/command/test.sh
-  #   depends_on:
-  #     - php81_eloquent_expansion
+  php82_eloquent_expansion:
+    container_name: php82_eloquent_expansion
+    build:
+      context: .
+      dockerfile: ./.docker/dockerfile/PHP82_Dockerfile
+    environment:
+      DB_HOST: mysql80_eloquent_expansion
+      DB_DATABASE: tests82
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - .:/var/www/html
+    init: true
+    # restart: unless-stopped
+    command: ./.docker/command/test.sh
+    depends_on:
+      - php81_eloquent_expansion

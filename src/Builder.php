@@ -59,29 +59,29 @@ class Builder extends BaseBuilder
 
         // whereAllowEmpty prefix がついている、かつパラメータが空
         if (
-            (str_starts_with($method, 'whereAllowEmpty') || str_starts_with($method, 'orWhereAllowEmpty'))
+            ($this->strStartsWith($method, 'whereAllowEmpty') || $this->strStartsWith($method, 'orWhereAllowEmpty'))
             &&
             $this->checkAllowEmpty($parameters)
         ) {
             // AllowEmpty オプションで null チェックはできない
-            if (str_ends_with($method, 'Null')) {
+            if ($this->strEndsWith($method, 'Null')) {
                 throw new BadMethodCallException('No such method: ' . $method);
             }
             return $this;
         }
 
         if ($whereExpression) {
-            if (str_starts_with($method, 'where')) {
+            if ($this->strStartsWith($method, 'where')) {
                 $columnName = $this->getColumnName($method, $whereExpression, 'whereAllowEmpty', 'where');
                 $method = 'where' . $whereExpression;
             }
-            if (str_starts_with($method, 'orWhere')) {
+            if ($this->strStartsWith($method, 'orWhere')) {
                 $columnName = $this->getColumnName($method, $whereExpression, 'orWhereAllowEmpty', 'orWhere');
                 $method = 'orWhere' . $whereExpression;
             }
         }
         if ($orderByExpression) {
-            if (str_starts_with($method, 'orderBy')) {
+            if ($this->strStartsWith($method, 'orderBy')) {
                 $columnName = $this->getColumnName($method, $orderByExpression, 'orderBy');
                 $method = 'orderBy' . $orderByExpression;
                 $parameters += [
@@ -90,16 +90,16 @@ class Builder extends BaseBuilder
             }
         }
 
-        // 既存メソッドであればそのまま実行
-        if (method_exists($this, $method)) {
-            $requestParameters = (count($parameters) === 1)
-                                    ? $parameters[0]
-                                    : $parameters;
-            return $this->{$method}($columnName, $requestParameters);
-        }
-
-        // where, orWhere が先頭の場合はカラム名をパラメータに追加
         if (!empty($columnName)) {
+            // 既存メソッドであればそのまま実行
+            if (method_exists($this, $method)) {
+                $requestParameters = (count($parameters) === 1)
+                                        ? $parameters[0]
+                                        : $parameters;
+                return $this->{$method}($columnName, $requestParameters);
+            }
+
+            // where, orWhere が先頭の場合はカラム名をパラメータに追加
             array_unshift($parameters, $columnName);
         }
 
@@ -142,7 +142,7 @@ class Builder extends BaseBuilder
     private function checkWhereBackwordExpression($method)
     {
         foreach (self::WHERE_BACKWORD_EXTENSION as $expression) {
-            if (str_ends_with($method, $expression)) {
+            if ($this->strEndsWith($method, $expression)) {
                 return $expression;
             }
         }
@@ -157,7 +157,7 @@ class Builder extends BaseBuilder
     private function checkOrderByBackwordExpression($method)
     {
         foreach (self::ORDER_BY_BACKWORD_EXTENSION as $expression) {
-            if (str_ends_with($method, $expression)) {
+            if ($this->strEndsWith($method, $expression)) {
                 return $expression;
             }
         }
@@ -184,5 +184,29 @@ class Builder extends BaseBuilder
         }
 
         return true;
+    }
+
+    /**
+     * @param  string  $haystack
+     * @param  string  $needle
+     * @return bool
+     */
+    private function strStartsWith(
+        string $haystack,
+        string $needle
+    ): bool {
+        return substr($haystack, 0, strlen($needle)) === $needle;
+    }
+
+    /**
+     * @param  string  $haystack
+     * @param  string  $needle
+     * @return bool
+     */
+    private function strEndsWith(
+        string $haystack,
+        string $needle
+    ): bool {
+        return substr($haystack, -strlen($needle)) === $needle;
     }
 }
