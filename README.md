@@ -2,8 +2,8 @@
 
 ## 機能概要
 
-php8.0 以上
-Laraevel9.0 以上
+php7.4 以上
+Laraevel8.0 以上
 
 Eloquent を拡張し、メソッドを追加します。
 
