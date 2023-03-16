@@ -30,12 +30,17 @@ class ConnectionFactory extends BaseConnectionFactory
             return $resolver($connection, $database, $prefix, $config);
         }
 
-        return match ($driver) {
-            'mysql' => new MySqlConnection($connection, $database, $prefix, $config),
-            'pgsql' => new PostgresConnection($connection, $database, $prefix, $config),
-            'sqlite' => new SQLiteConnection($connection, $database, $prefix, $config),
-            'sqlsrv' => new SqlServerConnection($connection, $database, $prefix, $config),
-            default => throw new InvalidArgumentException("Unsupported driver [{$driver}]."),
-        };
+        switch ($driver) {
+            case 'mysql':
+                return new MySqlConnection($connection, $database, $prefix, $config);
+            case 'pgsql':
+                return new PostgresConnection($connection, $database, $prefix, $config);
+            case 'sqlite':
+                return new SQLiteConnection($connection, $database, $prefix, $config);
+            case 'sqlsrv':
+                return new SqlServerConnection($connection, $database, $prefix, $config);
+            default:
+                throw new InvalidArgumentException("Unsupported driver [{$driver}].");
+        }
     }
 }

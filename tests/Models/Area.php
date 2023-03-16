@@ -1,8 +1,8 @@
 <?php
 
-namespace Kanagama\EloquentExpansion\Models;
+namespace Kanagama\EloquentExpansion\Tests\Models;
 
-use Kanagama\EloquentExpansion\Models\Traits\FieldViewFlgBehavior;
+use Kanagama\EloquentExpansion\Tests\Models\Traits\FieldViewFlgBehavior;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

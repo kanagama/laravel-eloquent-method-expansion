@@ -1,6 +1,6 @@
 <?php
 
-namespace Kanagama\EloquentExpansion\Models\Traits;
+namespace Kanagama\EloquentExpansion\Tests\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 
