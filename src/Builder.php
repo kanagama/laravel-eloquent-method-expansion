@@ -187,6 +187,8 @@ class Builder extends BaseBuilder
     }
 
     /**
+     * 前方一致 str_start_with() 代替
+     *
      * @param  string  $haystack
      * @param  string  $needle
      * @return bool
@@ -199,6 +201,8 @@ class Builder extends BaseBuilder
     }
 
     /**
+     * 後方一致 str_end_with() 代替
+     *
      * @param  string  $haystack
      * @param  string  $needle
      * @return bool
