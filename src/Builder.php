@@ -14,6 +14,7 @@ class Builder extends BaseBuilder
     /**
      * where() 後方一致（順番大事）
      *
+     * @static
      * @var array
      */
     private const WHERE_BACKWORD_EXTENSION = [
@@ -36,6 +37,7 @@ class Builder extends BaseBuilder
     /**
      * orderBy 後方一致
      *
+     * @static
      * @var array
      */
     private const ORDER_BY_BACKWORD_EXTENSION = [
@@ -192,6 +194,8 @@ class Builder extends BaseBuilder
      * @param  string  $haystack
      * @param  string  $needle
      * @return bool
+     *
+     * @todo PHP7.4 で動作させるために作成
      */
     private function strStartsWith(
         string $haystack,
@@ -206,6 +210,8 @@ class Builder extends BaseBuilder
      * @param  string  $haystack
      * @param  string  $needle
      * @return bool
+     *
+     * @todo PHP7.4 で動作させるために作成
      */
     private function strEndsWith(
         string $haystack,

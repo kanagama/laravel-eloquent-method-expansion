@@ -16,6 +16,9 @@ class ScopeMethodDuplicateTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * @var Area
+     */
     private Area $area;
 
     /**
@@ -33,6 +36,7 @@ class ScopeMethodDuplicateTest extends TestCase
         ]);
         $area->save();
 
+        /** @var Area */
         $this->area = app()->make(Area::class);
     }
 
@@ -41,6 +45,7 @@ class ScopeMethodDuplicateTest extends TestCase
      */
     public function scopeメソッドと重複していてもエラーにならない()
     {
+        /** @var Area */
         $area = $this->area
             ->whereViewFlgIsNotNull()
             ->first();

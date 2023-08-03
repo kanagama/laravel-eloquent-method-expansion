@@ -2,6 +2,7 @@
 
 namespace Kanagama\EloquentExpansion\Tests\Unit;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Kanagama\EloquentExpansion\Tests\Models\Product;
 use Kanagama\EloquentExpansion\Tests\TestCase;
@@ -13,6 +14,9 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * @var Product
+     */
     private Product $product;
 
     /**
@@ -33,6 +37,7 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
         ]);
         $product->save();
 
+        /** @var Product */
         $this->product = app()->make(Product::class);
     }
 
@@ -41,6 +46,7 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
      */
     public function columNameの一部にexpressionが含まれていても正しいcolumnNameを取得できる()
     {
+        /** @var Collection */
         $products = $this->product->whereSaleDateStartDate('2022-06-15')->get();
 
         $this->assertCount(1, $products);
@@ -51,6 +57,7 @@ class DuplicateExpressionAndColumnNameTest extends TestCase
      */
     public function columNameがexpressionと重複した名称でも正しいcolumnNameを取得できる()
     {
+        /** @var Collection */
         $products = $this->product->whereDateDate('2022-05-21')->get();
 
         $this->assertCount(1, $products);
