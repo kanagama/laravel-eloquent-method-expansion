@@ -7,6 +7,18 @@ use Kanagama\EloquentExpansion\Connection\ConnectionFactory;
 use Illuminate\Support\ServiceProvider;
 
 /**
+ * @method Builder whereNull($column, $boolean = 'and, $not = false)
+ * @method Builder whereNotNull($column, $boolean = 'and)
+ * @method Builder where($column, $operator = null $value = null, $boolean = 'and)
+ * @method Builder whereColumn($first, $operator = null, $second = null, $boolean = 'and)
+ * @method Builder whereDate($column, $operator, $value = null, $boolean = 'and')
+ * @method Builder whereMonth($column, $operator, $value = null, $boolean = 'and)
+ * @method Builder whereDay($column, $operator, $value = null, $boolean = 'and')
+ * @method Builder whereYear($column, $operator, $value = null, $boolean = 'and')
+ * @method Builder whereTime($column, $operator, $value = null, $boolean = 'and')
+ * @method Builder orderBy($column, $direction = 'asc')
+ * @method Builder orderByRaw($column, $binding = [])
+ *
  * @author k.nagama <k.nagama@gmail.com>
  */
 class EloquentMethodExpansionServiceProvider extends ServiceProvider

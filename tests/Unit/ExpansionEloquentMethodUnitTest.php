@@ -8,9 +8,11 @@ use Kanagama\EloquentExpansion\Tests\Models\Area;
 use Kanagama\EloquentExpansion\Tests\TestCase;
 
 /**
+ * 拡張機能で追加されたメソッドが正常に動くことを確認する
+ *
  * @author k-nagama <k.nagama0632@gmail.com>
  */
-class EloquentMethodExpansionUnitTest extends TestCase
+class ExpansionEloquentMethodUnitTest extends TestCase
 {
     use DatabaseTransactions;
 
