@@ -9,6 +9,8 @@ use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Kanagama\EloquentExpansion\Tests\Models\Area;
+use Kanagama\EloquentExpansion\Tests\Models\City;
+use Kanagama\EloquentExpansion\Tests\Models\Prefecture;
 use Kanagama\EloquentExpansion\Tests\TestCase;
 
 /**
@@ -26,7 +28,12 @@ class DefaultEloquentMethodUnitTest extends TestCase
     private Area $area;
 
     /**
-     * @return void
+     * @var Prefecture
+     */
+    private Prefecture $prefecture;
+
+    /**
+     *
      */
     public function setUp(): void
     {
@@ -72,8 +79,25 @@ class DefaultEloquentMethodUnitTest extends TestCase
         ]);
         $area->save();
 
+        Prefecture::insert([
+            'id'         => 1,
+            'name'       => '北海道',
+            'created_at' => CarbonImmutable::now(),
+            'updated_at' => CarbonImmutable::now(),
+        ]);
+
+        City::insert([
+            'id'            => 1,
+            'prefecture_id' => 1,
+            'name'          => '札幌',
+            'created_at'    => CarbonImmutable::now(),
+            'updated_at'    => CarbonImmutable::now(),
+        ]);
+
         /** @var Area */
         $this->area = app()->make(Area::class);
+        /** @var Prefecture */
+        $this->prefecture = app()->make(Prefecture::class);
     }
 
     /**
@@ -509,27 +533,60 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @test
      * @group join
      */
     public function join()
     {
+        /** @var EloquentCollection */
+        $prefectures = $this->prefecture
+            ->select([
+                'cities.name as city_name',
+            ])
+            ->join('cities', 'prefectures.id', '=', 'cities.id')
+            ->get();
 
+        foreach ($prefectures as $prefecture) {
+            $this->assertNotEmpty($prefecture->city_name);
+        }
     }
 
     /**
+     * @test
      * @group leftJoin
      */
     public function leftJoin()
     {
+        /** @var EloquentCollection */
+        $prefectures = $this->prefecture
+            ->select([
+                'cities.name as city_name',
+            ])
+            ->leftJoin('cities', 'prefectures.id', '=', 'cities.id')
+            ->get();
 
+        foreach ($prefectures as $prefecture) {
+            $this->assertNotNull($prefecture->city_name);
+        }
     }
 
     /**
+     * @test
      * @group rightJoin
      */
     public function rightJoin()
     {
+        /** @var EloquentCollection */
+        $prefectures = $this->prefecture
+            ->select([
+                'cities.name as city_name',
+            ])
+            ->rightJoin('cities', 'prefectures.id', '=', 'cities.id')
+            ->get();
 
+        foreach ($prefectures as $prefecture) {
+            $this->assertNotEmpty($prefecture->city_name);
+        }
     }
 
     /**
@@ -541,6 +598,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group joinSub
      */
     public function joinSub()
@@ -557,6 +615,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group rightJoinSub
      */
     public function rightJoinSub()
@@ -565,6 +624,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group union
      */
     public function union()
@@ -573,6 +633,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group orWhere
      */
     public function orWhere()
@@ -581,6 +642,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group joinWhere
      */
     public function jsonWhere()
@@ -589,6 +651,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereJsonContains
      */
     public function whereJsonContains()
@@ -597,6 +660,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereJsonLength
      */
     public function whereJsonLength()
@@ -605,6 +669,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereBetween
      */
     public function whereBetween()
@@ -613,6 +678,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group orWhereBetween
      */
     public function orWhereBetween()
@@ -621,6 +687,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereNotBetween
      */
     public function whereNotBeteen()
@@ -629,6 +696,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group orWhereNotBetween
      */
     public function orWhereNotBetween()
@@ -637,14 +705,26 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @test
      * @group whereIn
      */
     public function whereIn()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->whereIn('view_flg', [0, 1,])
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertTrue(
+                in_array($area->view_flg, [0, 1,], true)
+            );
+        }
     }
 
     /**
+     * @todo
      * @group orWhereIn
      */
     public function orWhereIn()
@@ -653,14 +733,26 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @test
      * @group whereNotIn
      */
     public function whereNotIn()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->whereNotIn('view_flg', [0, 1,])
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertTrue(
+                !in_array($area->view_flg, [0, 1,], true)
+            );
+        }
     }
 
     /**
+     * @todo
      * @group orWhereNotIn
      */
     public function orWhereNotIn()
@@ -669,14 +761,24 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @test
      * @group whereNull
      */
     public function whereNull()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->whereNull('view_flg')
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertNull($area->view_flg);
+        }
     }
 
     /**
+     * @todo
      * @group orWhereNull
      */
     public function orWhereNull()
@@ -685,14 +787,24 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @test
      * @group whereNotNull
      */
     public function whereNotNull()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->whereNotNull('view_flg')
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertNotNull($area->view_flg);
+        }
     }
 
     /**
+     * @todo
      * @group orWhereNotNull
      */
     public function orWhereNotNull()
@@ -701,6 +813,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereDate
      */
     public function whereDate()
@@ -709,6 +822,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereMonth
      */
     public function whereMonth()
@@ -717,6 +831,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereDay
      */
     public function whereDay()
@@ -725,6 +840,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereYear
      */
     public function whereYear()
@@ -733,6 +849,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereTime
      */
     public function whereTime()
@@ -741,6 +858,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereColumn
      */
     public function whereColumn()
@@ -749,6 +867,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group orWhereColumn
      */
     public function orWhereColumn()
@@ -757,6 +876,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group whereExists
      */
     public function whereExists()
@@ -765,6 +885,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group subQueryWhere
      */
     public function サブクエリwhere()
@@ -773,6 +894,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group orderBy
      */
     public function orderBy()
@@ -781,6 +903,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group latest
      */
     public function latest()
@@ -789,6 +912,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group oldest
      */
     public function oldest()
@@ -797,6 +921,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group inRandomOrder
      */
     public function inRandomOrder()
@@ -805,6 +930,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group reorder
      */
     public function reorder()
@@ -813,6 +939,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @gruop groupBy
      */
     public function groupBy()
@@ -821,6 +948,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group having
      */
     public function having()
@@ -829,6 +957,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group skip
      */
     public function skip()
@@ -837,6 +966,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group take
      */
     public function take()
@@ -845,6 +975,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group limit
      */
     public function limit()
@@ -853,6 +984,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @gropu offset
      */
     public function offset()
@@ -861,6 +993,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group when
      */
     public function when()
@@ -932,6 +1065,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group undateOrInsert
      */
     public function updateOrInsert()
@@ -998,11 +1132,50 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
+     * @todo
      * @group lockForUpdate
      */
     public function lockForUpdate()
     {
 
+    }
+
+    /**
+     * with()が正常に動作する
+     *
+     * @test
+     * @group with
+     */
+    public function with()
+    {
+        $prefecture = $this->prefecture
+            ->with('cities')
+            ->first();
+
+        foreach ($prefecture->cities as $city) {
+            $this->assertInstanceOf(
+                City::class,
+                $city
+            );
+        }
+    }
+
+    /**
+     * @test
+     * @group load
+     */
+    public function load()
+    {
+        $prefecture = $this->prefecture
+            ->load('cities')
+            ->first();
+
+        foreach ($prefecture->cities as $city) {
+            $this->assertInstanceOf(
+                City::class,
+                $city
+            );
+        }
     }
 }
 
