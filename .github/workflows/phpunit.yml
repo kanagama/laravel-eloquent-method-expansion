@@ -52,6 +52,7 @@ jobs:
       run: |
         mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/areas.sql
         mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/products.sql
+        mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/prefectures_and_cities.sql
 
     - name: Run PHPUnit Test
       # phpunit が 9.3 以降は phpunit.xml のフォーマットが変わっており、非推奨の warning が出る
