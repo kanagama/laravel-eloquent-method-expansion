@@ -4,6 +4,7 @@ namespace Kanagama\EloquentExpansion\Tests\Models;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|CarbonImmutable $created_at
  * @property Carbon|CarbonImmutable $updated_at
  * @property HasMany $cities
+ *
+ * @method static Builder whereNameIsNull()
+ * @method Builder whereNameIsNull()
  *
  * @author k-nagama <k.nagama0632@gmail.com>
  */
@@ -37,5 +41,14 @@ class Prefecture extends Model
     public function cities(): HasMany
     {
         return $this->hasMany(City::class, 'prefecture_id');
+    }
+
+    /**
+     * @param  Builder $query
+     * @return void
+     */
+    public function scopeWhereNameIsNull(Builder $query): Builder
+    {
+        return $query->where('name', '沖縄');
     }
 }
