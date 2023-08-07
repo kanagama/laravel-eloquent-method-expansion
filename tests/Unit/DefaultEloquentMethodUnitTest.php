@@ -174,12 +174,14 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function pluck(): SupportCollection
     {
+        /** @var SupportCollection */
         $areas = $this->area->pluck('name');
         $this->assertInstanceOf(
             SupportCollection::class,
             $areas
         );
 
+        /** @var string */
         foreach ($areas as $name) {
             $this->assertNotEmpty($name);
         }
@@ -195,6 +197,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function pluckで値が取得できる(SupportCollection $areas)
     {
+        /** @var string */
         foreach ($areas as $name) {
             $this->assertNotEmpty($name);
         }
@@ -392,6 +395,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function whereRaw()
     {
+        /** @var EloquentCollection */
         $areas = $this->area->whereRaw('view_flg = 1')->get();
         $this->assertInstanceOf(
             EloquentCollection::class,
@@ -565,6 +569,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
             ->leftJoin('cities', 'prefectures.id', '=', 'cities.id')
             ->get();
 
+        /** @var Prefecture */
         foreach ($prefectures as $prefecture) {
             $this->assertNotNull($prefecture->city_name);
         }
@@ -584,6 +589,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
             ->rightJoin('cities', 'prefectures.id', '=', 'cities.id')
             ->get();
 
+        /** @var Prefecture */
         foreach ($prefectures as $prefecture) {
             $this->assertNotEmpty($prefecture->city_name);
         }
@@ -939,57 +945,117 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
-     * @todo
-     * @gruop groupBy
+     * @test
+     * @group groupBy
      */
     public function groupBy()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->select('view_flg')
+            ->whereNotNull('view_flg')
+            ->groupBy('view_flg')
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertTrue(
+                isset($area->view_flg)
+            );
+        }
     }
 
     /**
-     * @todo
+     * @test
      * @group having
      */
     public function having()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->select('view_flg')
+            ->groupBy('view_flg')
+            ->having('view_flg', '>', 0)
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertTrue(
+                in_array($area->view_flg, [1,2,], true)
+            );
+        }
     }
 
     /**
-     * @todo
+     * @test
      * @group skip
      */
     public function skip()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->orderBy('created_at', 'asc')
+            ->skip(2)
+            ->take(1)
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertEquals(
+                'ひめゆり通り',
+                $area->name
+            );
+        }
     }
 
     /**
-     * @todo
+     * @test
      * @group take
      */
     public function take()
     {
-
+        /** @var EloquentCollection */
+        $areas = $this->area->take(1)->get();
+        $this->assertCount(
+            1,
+            $areas
+        );
     }
 
     /**
-     * @todo
+     * @test
      * @group limit
      */
     public function limit()
     {
-
+        /** @var EloquentCollection */
+        $areas = $this->area->limit(1)->get();
+        $this->assertCount(
+            1,
+            $areas
+        );
     }
 
     /**
-     * @todo
+     * @test
      * @gropu offset
      */
     public function offset()
     {
+        /** @var EloquentCollection */
+        $areas = $this->area
+            ->orderBy('created_at', 'asc')
+            ->offset(2)
+            ->limit(1)
+            ->get();
 
+        /** @var Area */
+        foreach ($areas as $area) {
+            $this->assertEquals(
+                'ひめゆり通り',
+                $area->name
+            );
+        }
     }
 
     /**
@@ -1024,7 +1090,7 @@ class DefaultEloquentMethodUnitTest extends TestCase
     public function insertで正常にレコードが追加される()
     {
         $this->insert();
-
+        /** @var Area */
         $area = $this->area->where('name', 'testinsert')->first();
         $this->assertInstanceOf(
             Area::class,
@@ -1065,12 +1131,28 @@ class DefaultEloquentMethodUnitTest extends TestCase
     }
 
     /**
-     * @todo
+     * @test
      * @group undateOrInsert
      */
     public function updateOrInsert()
     {
+        /** @var Area */
+        $area = $this->area->updateOrCreate(
+            [
+                'id' => 5,
+            ],
+            [
+                'name' => '都市モノレール',
+                'view_flg' => 1,
+                'created_at' => CarbonImmutable::now(),
+                'updated_at' => CarbonImmutable::now(),
+            ]
+        );
 
+        $this->assertInstanceOf(
+            Area::class,
+            $area
+        );
     }
 
     /**
@@ -1079,9 +1161,15 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function increment()
     {
-        $this->area->where('view_flg', 1)->increment('view_flg', 2);
+        $this->area
+            ->where('view_flg', 1)
+            ->increment('view_flg', 2);
 
-        $area = $this->area->where('view_flg', 3)->first();
+        /** @var Area */
+        $area = $this->area
+            ->where('view_flg', 3)
+            ->first();
+
         $this->assertInstanceOf(
             Area::class,
             $area
@@ -1096,7 +1184,9 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function decrement()
     {
-        $this->area->where('view_flg', 2)->decrement('view_flg', 1);
+        $this->area
+            ->where('view_flg', 2)
+            ->decrement('view_flg', 1);
 
         /** @var EloquentCollection */
         $areas = $this->area->where('view_flg', 1)->get();
@@ -1148,10 +1238,12 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function with()
     {
+        /** @var Prefecture */
         $prefecture = $this->prefecture
             ->with('cities')
             ->first();
 
+        /** @var City */
         foreach ($prefecture->cities as $city) {
             $this->assertInstanceOf(
                 City::class,
@@ -1166,10 +1258,12 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function load()
     {
+        /** @var Prefecture */
         $prefecture = $this->prefecture
             ->load('cities')
             ->first();
 
+        /** @var City */
         foreach ($prefecture->cities as $city) {
             $this->assertInstanceOf(
                 City::class,
