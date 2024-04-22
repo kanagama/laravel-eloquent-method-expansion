@@ -130,10 +130,11 @@ class DefaultEloquentMethodUnitTest extends TestCase
      */
     public function where()
     {
-        $area = $this->area->where([
-            'name' => '知念岬',
-        ])
-        ->first();
+        $area = $this->area
+            ->where([
+                'name' => '知念岬',
+            ])
+            ->first();
 
         $this->assertInstanceOf(
             Area::class,
@@ -159,7 +160,8 @@ class DefaultEloquentMethodUnitTest extends TestCase
     public function find()
     {
         /** @var Area */
-        $area = $this->area->first();
+        $area = $this->area
+            ->first();
 
         $this->assertInstanceOf(
             Area::class,

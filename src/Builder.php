@@ -15,7 +15,7 @@ class Builder extends BaseBuilder
      * where() 後方一致（順番大事）
      *
      * @static
-     * @var array
+     * @var string[]
      */
     private const WHERE_BACKWORD_EXTENSION = [
         'ColumnGte', 'ColumnGt', 'ColumnLte', 'ColumnLt', 'Column',
@@ -38,7 +38,7 @@ class Builder extends BaseBuilder
      * orderBy 後方一致
      *
      * @static
-     * @var array
+     * @var string[]
      */
     private const ORDER_BY_BACKWORD_EXTENSION = [
         'Asc', 'Desc', 'Field',
@@ -66,23 +66,24 @@ class Builder extends BaseBuilder
         ) {
             // AllowEmpty オプションで null チェックはできない
             if ($this->strEndsWith($method, 'Null')) {
-                throw new BadMethodCallException('No such method: ' . $method);
+                throw new BadMethodCallException('No such method: ' . htmlspecialchars($method));
             }
+
             return $this;
         }
 
         if ($whereExpression) {
-            if ($this->strStartsWith($method, 'where')) {
+            if ($this->strStartsWith($method, 'where') === true) {
                 $columnName = $this->getColumnName($method, $whereExpression, 'whereAllowEmpty', 'where');
                 $method = 'where' . $whereExpression;
             }
-            if ($this->strStartsWith($method, 'orWhere')) {
+            if ($this->strStartsWith($method, 'orWhere') === true) {
                 $columnName = $this->getColumnName($method, $whereExpression, 'orWhereAllowEmpty', 'orWhere');
                 $method = 'orWhere' . $whereExpression;
             }
         }
         if ($orderByExpression) {
-            if ($this->strStartsWith($method, 'orderBy')) {
+            if ($this->strStartsWith($method, 'orderBy') === true) {
                 $columnName = $this->getColumnName($method, $orderByExpression, 'orderBy');
                 $method = 'orderBy' . $orderByExpression;
                 $parameters += [
@@ -93,7 +94,7 @@ class Builder extends BaseBuilder
 
         if (!empty($columnName)) {
             // 既存メソッドであればそのまま実行
-            if (method_exists($this, $method)) {
+            if (method_exists($this, $method) === true) {
                 $requestParameters = (count($parameters) === 1)
                                         ? $parameters[0]
                                         : $parameters;
