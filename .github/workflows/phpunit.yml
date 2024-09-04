@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/phpunit.yml'
+      - 'composer.json'
       - 'src/**'
       - 'tests/**'
 
