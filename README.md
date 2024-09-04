@@ -915,3 +915,7 @@ make test
 ```
 
 ※コンテナ起動時にテストが実行される
+
+# testbench マニュアル
+
+https://orchestraplatform.readme.io/docs/testbench
