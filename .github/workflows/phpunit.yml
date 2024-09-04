@@ -36,7 +36,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
@@ -44,7 +44,16 @@ jobs:
         php-version: ${{ matrix.php }}
         extensions: mbstring, zip, xml
 
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vendor
+        key: "php-${{ matrix.php }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.json') }}"
+        restore-keys: "php-${{ matrix.php-version }}-composer-"
+
     - name: Laravel Install
+      if: steps.composer-cache.outputs.cache-hit != 'true'
       run: |
         composer require --dev "laravel/framework:${{ matrix.library.laravel }}"
 
