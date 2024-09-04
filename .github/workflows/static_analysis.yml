@@ -10,8 +10,12 @@ on:
 jobs:
   static-analysis:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
+    - name: Actions Timeline
+      uses: Kesin11/actions-timeline@v2
+
     - name: Checkout code
       uses: actions/checkout@v4
 
