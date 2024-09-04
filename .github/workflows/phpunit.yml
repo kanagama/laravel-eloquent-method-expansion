@@ -49,8 +49,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/vendor
-        key: "php-${{ matrix.php }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.json') }}"
-        restore-keys: "php-${{ matrix.php-version }}-composer-"
+        key: "php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}"
+        restore-keys: "php-${{ matrix.php }}-composer-"
 
     - name: Laravel Install
       if: steps.composer-cache.outputs.cache-hit != 'true'

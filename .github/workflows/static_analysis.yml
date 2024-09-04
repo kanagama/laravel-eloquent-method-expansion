@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
@@ -17,11 +17,17 @@ jobs:
         php-version: '7.4'
         extensions: mbstring, zip, xml
 
-    - name: Install Composer
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vendor
+        key: "php-74-static-analysis-composer-${{ hashFiles('composer.json') }}"
+        restore-keys: "php-74-static-analysis-composer-"
+
+    - name: Laravel Install
+      if: steps.composer-cache.outputs.cache-hit != 'true'
       run: |
-        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-        php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-        php -r "unlink('composer-setup.php');"
         composer install
 
     - name: Install Dependencies
