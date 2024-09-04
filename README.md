@@ -1,5 +1,7 @@
 # Eloquent Method Expansion
 
+ [testbench公式ドキュメント](https://orchestraplatform.readme.io/docs/testbench)
+
 ## 機能概要
 
 php7.4 以上
@@ -915,7 +917,3 @@ make test
 ```
 
 ※コンテナ起動時にテストが実行される
-
-# testbench マニュアル
-
-https://orchestraplatform.readme.io/docs/testbench
