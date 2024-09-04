@@ -2,6 +2,9 @@ name: Static Analysis
 
 on:
   pull_request:
+    paths:
+      - '.github/workflows/static_analysis.yml'
+      - 'src/**'
 
 jobs:
   static-analysis:

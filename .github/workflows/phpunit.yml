@@ -2,6 +2,10 @@ name: PHPUnit test
 
 on:
   pull_request:
+    paths:
+      - '.github/workflows/phpunit.yml'
+      - 'src/**'
+      - 'tests/**'
 
 jobs:
   phpunit-test:
