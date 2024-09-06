@@ -40,7 +40,7 @@ class ConnectionFactory extends BaseConnectionFactory
             case 'sqlsrv':
                 return new SqlServerConnection($connection, $database, $prefix, $config);
             default:
-                throw new InvalidArgumentException("Unsupported driver [{$driver}].");
+                throw new InvalidArgumentException('Unsupported driver [' . htmlspecialchars($driver) . ']');
         }
     }
 }
