@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   mysql80_eloquent_expansion:
     container_name: mysql80_eloquent_expansion
