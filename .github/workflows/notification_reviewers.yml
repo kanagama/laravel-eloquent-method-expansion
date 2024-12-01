@@ -24,22 +24,25 @@ jobs:
                | jq -r '.[] | select(.requested_reviewers | length > 0) | {number: .number, title: .title, url: .html_url, reviewers: .requested_reviewers[].login}' \
                > prs.json
 
+      - name: show json
+        run: cat prs.json
+
       - name: Notify reviewers via GitHub comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ -s prs.json ]; then
-            for row in $(cat prs.json | jq -c '.'); do
-              pr_number=$(echo $row | jq -r '.number')
-              pr_title=$(echo $row | jq -r '.title')
-              reviewers=$(echo $row | jq -r '.reviewers')
+            cat prs.json | jq -c '.[]' | while read -r row; do
+              pr_number=$(echo "$row" | jq -r '.number')
+              pr_title=$(echo "$row" | jq -r '.title')
+              reviewers=$(echo "$row" | jq -r '.reviewers')
 
-              message=":bell: **Reminder**: The pull request [#${pr_number} - ${pr_title}](https://github.com/${{ github.repository }}/pull/${pr_number}) is waiting for your review.\nReviewers: ${reviewers}"
+              message=":bell: **Reminder**: The pull request [#${pr_number} - ${pr_title}](https://github.com/kanagama/laravel-eloquent-method-expansion/pull/${pr_number}) is waiting for your review.\nReviewers: ${reviewers}"
 
               curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
-                   -H "Content-Type: application/json" \
-                   -d "{\"body\": \"$message\"}" \
-                   https://api.github.com/repos/${{ github.repository }}/issues/${pr_number}/comments
+                  -H "Content-Type: application/json" \
+                  -d "{\"body\": \"$message\"}" \
+                  "https://api.github.com/repos/kanagama/laravel-eloquent-method-expansion/issues/${pr_number}/comments"
             done
           else
             echo "No pending reviews."
