@@ -26,38 +26,39 @@ jobs:
       - name: show json
         run: cat pull_request.json
 
-      - name: Notify reviewers via GitHub comments
+      - name: Notify reviewers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -s pull_request.json ]; then
-            cat pull_request.json | jq -c '.[]' | while read -r row; do
-              pr_number=$(echo "$row" | jq -r '.number')
-              pr_title=$(echo "$row" | jq -r '.title')
-              reviewers=$(echo "$row" | jq -r '.reviewers | map("@\(. // empty)") | join(" ")')
-
-              # レビュワーが空の場合はスキップ
-              if [ -z "$reviewers" ]; then
-                echo "PR #${pr_number} にはレビューが完了していないレビュワーは存在しません"
-                continue
-              fi
-
-              message="${reviewers}\nレビューお願いいたします。"
-
-              # コメントの送信
-              response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-                -H "Authorization: Bearer $GITHUB_TOKEN" \
-                -H "Content-Type: application/json" \
-                -d "{\"body\": \"$message\"}" \
-                "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments")
-
-              # レスポンスコードを確認
-              if [ "$response" -eq 201 ]; then
-                echo "PR #${pr_number} へのレビュー依頼が完了しました"
-              else
-                echo "PR #${pr_number} へのレビュー依頼に失敗しました"
-              fi
-            done
-          else
-            echo "レビューが必要なプルリクがありません。"
+          if [ ! -f pull_request.json ]; then
+            echo "pull_request.json が存在しません。処理を終了します。"
+            exit 1
           fi
+
+          cat pull_request.json | jq -c '.[]' | while read -r row; do
+            pr_number=$(echo "$row" | jq -r '.number')
+            pr_title=$(echo "$row" | jq -r '.title')
+            reviewers=$(echo "$row" | jq -r '.reviewers | map("@\(. // empty)") | join(" ")')
+
+            # レビュワーが空の場合はスキップ
+            if [ -z "$reviewers" ]; then
+              echo "PR #${pr_number} にはレビューが完了していないレビュワーは存在しません"
+              continue
+            fi
+
+            message="${reviewers}\nレビューお願いいたします。"
+
+            # コメントの送信
+            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"body\": \"$message\"}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments")
+
+            # レスポンスコードを確認
+            if [ "$response" -eq 201 ]; then
+              echo "PR #${pr_number} へのレビュー依頼が完了しました"
+            else
+              echo "PR #${pr_number} へのレビュー依頼に失敗しました"
+            fi
+          done
