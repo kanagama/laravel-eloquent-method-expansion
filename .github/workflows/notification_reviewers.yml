@@ -34,7 +34,7 @@ jobs:
             cat prs.json | jq -c '.[]' | while read -r row; do
               pr_number=$(echo "$row" | jq -r '.number')
               pr_title=$(echo "$row" | jq -r '.title')
-              reviewers=$(echo "$row" | jq -r '.reviewers | join(", ")')
+              reviewers=$(echo "$row" | jq -r '.reviewers | map("@\(. // empty)") | join(" ")')
 
               # レビュワーが空の場合はスキップ
               if [ -z "$reviewers" ]; then
