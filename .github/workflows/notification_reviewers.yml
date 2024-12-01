@@ -22,42 +22,42 @@ jobs:
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/pulls \
               | jq '[.[] | select(.requested_reviewers | length > 0) | {number: .number, title: .title, url: .html_url, reviewers: [.requested_reviewers[].login]}]' \
-              > prs.json
+              > pull_request.json
       - name: show json
-        run: cat prs.json
+        run: cat pull_request.json
 
       - name: Notify reviewers via GitHub comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -s prs.json ]; then
-            cat prs.json | jq -c '.[]' | while read -r row; do
+          if [ -s pull_request.json ]; then
+            cat pull_request.json | jq -c '.[]' | while read -r row; do
               pr_number=$(echo "$row" | jq -r '.number')
               pr_title=$(echo "$row" | jq -r '.title')
               reviewers=$(echo "$row" | jq -r '.reviewers | map("@\(. // empty)") | join(" ")')
 
               # レビュワーが空の場合はスキップ
               if [ -z "$reviewers" ]; then
-                echo "Skipping PR #${pr_number} - No reviewers assigned."
+                echo "PR #${pr_number} にはレビューが完了していないレビュワーは存在しません"
                 continue
               fi
 
-              message=":bell: **Reminder**: The pull request [#${pr_number} - ${pr_title}](https://github.com/kanagama/laravel-eloquent-method-expansion/pull/${pr_number}) is waiting for your review.\nReviewers: ${reviewers}"
+              message="${reviewers}\nレビューお願いいたします。"
 
               # コメントの送信
               response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
                 -H "Authorization: Bearer $GITHUB_TOKEN" \
                 -H "Content-Type: application/json" \
                 -d "{\"body\": \"$message\"}" \
-                "https://api.github.com/repos/kanagama/laravel-eloquent-method-expansion/issues/${pr_number}/comments")
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments")
 
               # レスポンスコードを確認
               if [ "$response" -eq 201 ]; then
-                echo "Comment posted successfully for PR #${pr_number}."
+                echo "PR #${pr_number} へのレビュー依頼が完了しました"
               else
-                echo "Failed to post comment for PR #${pr_number}. HTTP status: $response"
+                echo "PR #${pr_number} へのレビュー依頼に失敗しました"
               fi
             done
           else
-            echo "No pending reviews."
+            echo "レビューが必要なプルリクがありません。"
           fi
