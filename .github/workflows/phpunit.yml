@@ -1,11 +1,18 @@
 name: PHPUnit test
 
 on:
+  workflow_dispatch:
   pull_request:
+    paths:
+      - '.github/workflows/phpunit.yml'
+      - 'composer.json'
+      - 'src/**'
+      - 'tests/**'
 
 jobs:
   phpunit-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     services:
       mysql:
@@ -35,8 +42,11 @@ jobs:
           - { php: 8.2, library: { laravel: ^8.0 } }
 
     steps:
+    - name: Actions Timeline
+      uses: Kesin11/actions-timeline@v2
+
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
@@ -44,7 +54,16 @@ jobs:
         php-version: ${{ matrix.php }}
         extensions: mbstring, zip, xml
 
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vendor
+        key: "php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}"
+        restore-keys: "php-${{ matrix.php }}-composer-"
+
     - name: Laravel Install
+      if: steps.composer-cache.outputs.cache-hit != 'true'
       run: |
         composer require --dev "laravel/framework:${{ matrix.library.laravel }}"
 
@@ -52,6 +71,7 @@ jobs:
       run: |
         mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/areas.sql
         mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/products.sql
+        mysql -h 127.0.0.1 -P 13306 -uroot -ppassword tests < .docker/mysql-init/prefectures_and_cities.sql
 
     - name: Run PHPUnit Test
       # phpunit が 9.3 以降は phpunit.xml のフォーマットが変わっており、非推奨の warning が出る
