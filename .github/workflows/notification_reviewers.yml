@@ -1,6 +1,7 @@
 name: Review Reminder
 
 on:
+  workflow_dispatch:
   schedule:
     # 火曜日の AM10:00 に実行
     - cron: '0 1 * * 2'
