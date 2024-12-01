@@ -5,7 +5,7 @@ test-build:
 test:
 	docker-compose -f docker-compose-test.yml up
 # 開発用のコンテナを作成する
-deelopment-build:
+development-build:
 	docker-compose -f docker-compose.yml build --no-cache --progress=plain
 # 開発用のコンテナを起動する
 development:
