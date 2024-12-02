@@ -2,9 +2,11 @@
 
 namespace Kanagama\EloquentExpansion\Tests\Unit;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Kanagama\EloquentExpansion\Tests\Models\Area;
+use Kanagama\EloquentExpansion\Tests\Models\ValueObjects\Common\ViewFlg;
 use Kanagama\EloquentExpansion\Tests\TestCase;
 
 /**
@@ -33,8 +35,8 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             'id'         => 1,
             'name'       => '那覇バスターミナル',
             'view_flg'   => 1,
-            'created_at' => '2021-01-01 00:00:00',
-            'updated_at' => '2021-01-01 00:00:00',
+            'created_at' => new CarbonImmutable('2021-01-01 00:00:00'),
+            'updated_at' => new CarbonImmutable('2021-01-01 00:00:00'),
         ]);
         $area->save();
 
@@ -43,8 +45,8 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             'id'         => 2,
             'name'       => 'おもろまち',
             'view_flg'   => 0,
-            'created_at' => '2022-02-01 00:00:00',
-            'updated_at' => '2022-02-01 02:00:00',
+            'created_at' => new CarbonImmutable('2022-02-01 00:00:00'),
+            'updated_at' => new CarbonImmutable('2022-02-01 02:00:00'),
         ]);
         $area->save();
 
@@ -53,8 +55,8 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             'id'         => 3,
             'name'       => 'ひめゆり通り',
             'view_flg'   => 2,
-            'created_at' => '2022-03-03 00:00:00',
-            'updated_at' => '2022-03-03 03:00:00',
+            'created_at' => new CarbonImmutable('2022-03-03 00:00:00'),
+            'updated_at' => new CarbonImmutable('2022-03-03 03:00:00'),
         ]);
         $area->save();
 
@@ -63,8 +65,8 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             'id'         => 4,
             'name'       => '知念岬',
             'view_flg'   => null,
-            'created_at' => '2022-04-04 00:00:00',
-            'updated_at' => '2022-04-04 04:00:00',
+            'created_at' => new CarbonImmutable('2022-04-04 00:00:00'),
+            'updated_at' => new CarbonImmutable('2022-04-04 04:00:00'),
         ]);
         $area->save();
 
@@ -133,9 +135,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         $beforeViewFlg = null;
         /** @var Area */
         foreach ($areas as $area) {
-            if (!is_null($beforeViewFlg)) {
+            if ($beforeViewFlg !== null) {
                 $this->assertTrue(
-                    is_null($area->view_flg)
+                    $area->view_flg === null
                     ||
                     $area->view_flg > $beforeViewFlg
                 );
@@ -160,9 +162,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         $beforeViewFlg = null;
         /** @var Area */
         foreach ($areas as $area) {
-            if (!is_null($beforeViewFlg)) {
+            if ($beforeViewFlg !== null) {
                 $this->assertTrue(
-                    is_null($area->view_flg)
+                    $area->view_flg === null
                     ||
                     $area->view_flg < $beforeViewFlg
                 );
@@ -180,12 +182,12 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereRaw('view_flg = 1')
+            ->whereRaw('view_flg = ' . ViewFlg::getShow())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertSame($area->view_flg, 1);
+            $this->assertSame($area->view_flg, ViewFlg::getShow());
         }
 
         $this->assertCount(1, $areas);
@@ -198,13 +200,15 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereRaw('view_flg = 1')
-            ->orWhereRaw('view_flg = 0')
+            ->whereRaw('view_flg = ' . ViewFlg::getShow())
+            ->orWhereRaw('view_flg = ' . ViewFlg::getHide())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertTrue(in_array($area->view_flg, [0, 1,]));
+            $this->assertTrue(
+                in_array($area->view_flg, [ViewFlg::getShow(), ViewFlg::getHide(),])
+            );
         }
 
         $this->assertCount(2, $areas);
@@ -217,12 +221,12 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlg(1)
+            ->whereViewFlg(ViewFlg::getShow())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertSame($area->view_flg, 1);
+            $this->assertSame($area->view_flg, ViewFlg::getShow());
         }
 
         $this->assertCount(1, $areas);
@@ -235,12 +239,12 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlgEq(1)
+            ->whereViewFlgEq(ViewFlg::getShow())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertSame($area->view_flg, 1);
+            $this->assertSame($area->view_flg, ViewFlg::getShow());
         }
 
         $this->assertCount(1, $areas);
@@ -272,13 +276,13 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlgEq(1)
-            ->orWhereViewFlgEq(0)
+            ->whereViewFlgEq(ViewFlg::getShow())
+            ->orWhereViewFlgEq(ViewFlg::getHide())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertTrue(in_array($area->view_flg, [0, 1,]));
+            $this->assertTrue(in_array($area->view_flg, [ViewFlg::getHide(), ViewFlg::getShow(),]));
         }
 
         $this->assertCount(2, $areas);
@@ -299,7 +303,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                $area->view_flg === 1
+                $area->view_flg === ViewFlg::getShow()
                 ||
                 $area->created_at->format('Y-m-d') === '2022-02-01'
             );
@@ -315,12 +319,12 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlgNotEq(1)
+            ->whereViewFlgNotEq(ViewFlg::getShow())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertNotSame($area->view_flg, 1);
+            $this->assertNotSame($area->view_flg, ViewFlg::getShow());
         }
 
         $this->assertCount(2, $areas);
@@ -352,13 +356,13 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlg(1)
-            ->orWhereViewFlgNotEq(0)
+            ->whereViewFlg(ViewFlg::getShow())
+            ->orWhereViewFlgNotEq(ViewFlg::getHide())
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertNotSame($area->view_flg, 0);
+            $this->assertNotSame($area->view_flg, ViewFlg::getHide());
         }
 
         $this->assertCount(2, $areas);
@@ -371,7 +375,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereAllowEmptyViewFlgEq(1)
+            ->whereAllowEmptyViewFlgEq(ViewFlg::getShow())
             ->orWhereAllowEmptyNameNotEq('おもろまち')
             ->orWhereAllowEmptyCreatedAtNotEq(null)
             ->get();
@@ -379,7 +383,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                $area->view_flg === 1
+                $area->view_flg === ViewFlg::getShow()
                 ||
                 $area->name !== 'おもろまち'
             );
@@ -431,13 +435,13 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlgEq(1)
+            ->whereViewFlgEq(ViewFlg::getShow())
             ->orWhereViewFlgIsNull()
             ->get();
 
         /** @var Area */
         foreach ($areas as $area) {
-            $this->assertNotSame($area->view_flg, 0);
+            $this->assertNotSame($area->view_flg, ViewFlg::getHide());
         }
 
         $this->assertCount(2, $areas);
@@ -486,7 +490,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
     {
         /** @var Collection */
         $areas = $this->area
-            ->whereViewFlgEq(1)
+            ->whereViewFlgEq(ViewFlg::getShow())
             ->orWhereViewFlgIsNotNull()
             ->get();
 
@@ -549,7 +553,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                (is_null($area->view_flg) || $area->created_at > '2022-02-01 00:00:00')
+                ($area->view_flg === null || $area->created_at > '2022-02-01 00:00:00')
             );
         }
 
@@ -571,7 +575,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                (is_null($area->view_flg) || $area->created_at > '2022-02-01 00:00:00')
+                ($area->view_flg === null || $area->created_at > '2022-02-01 00:00:00')
             );
         }
 
@@ -629,7 +633,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at >= '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at >= '2022-02-01 00:00:00'
             );
         }
 
@@ -651,7 +655,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at >= '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at >= '2022-02-01 00:00:00'
             );
         }
 
@@ -709,7 +713,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at < '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at < '2022-02-01 00:00:00'
             );
         }
 
@@ -731,7 +735,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at < '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at < '2022-02-01 00:00:00'
             );
         }
 
@@ -789,7 +793,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at <= '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at <= '2022-02-01 00:00:00'
             );
         }
 
@@ -811,7 +815,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at <= '2022-02-01 00:00:00'
+                $area->view_flg === null || $area->created_at <= '2022-02-01 00:00:00'
             );
         }
 
@@ -869,7 +873,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -891,7 +895,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -949,7 +953,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -971,7 +975,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -1029,7 +1033,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -1051,7 +1055,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -1109,7 +1113,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -1131,7 +1135,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -1189,7 +1193,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -1211,7 +1215,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name === '那覇バスターミナル'
+                $area->view_flg === null || $area->name === '那覇バスターミナル'
             );
         }
 
@@ -1269,7 +1273,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -1291,7 +1295,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->name !== '那覇バスターミナル'
+                $area->view_flg === null || $area->name !== '那覇バスターミナル'
             );
         }
 
@@ -1330,7 +1334,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->eq($area->updated_at)
+                $area->view_flg === null || $area->created_at->eq($area->updated_at)
             );
         }
 
@@ -1388,7 +1392,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->eq($area->updated_at)
+                $area->view_flg === null || $area->created_at->eq($area->updated_at)
             );
         }
 
@@ -1410,7 +1414,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->eq($area->updated_at)
+                $area->view_flg === null || $area->created_at->eq($area->updated_at)
             );
         }
 
@@ -1468,7 +1472,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->updated_at->gt($area->created_at)
+                $area->view_flg !== null || $area->updated_at->gt($area->created_at)
             );
         }
 
@@ -1490,7 +1494,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->updated_at->gt($area->created_at)
+                $area->view_flg !== null || $area->updated_at->gt($area->created_at)
             );
         }
 
@@ -1548,7 +1552,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->updated_at->gte($area->created_at)
+                $area->view_flg === null || $area->updated_at->gte($area->created_at)
             );
         }
 
@@ -1570,7 +1574,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->updated_at->gte($area->created_at)
+                $area->view_flg === null || $area->updated_at->gte($area->created_at)
             );
         }
 
@@ -1619,7 +1623,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) && $area->created_at->lt($area->updated_at)
+                $area->view_flg === null && $area->created_at->lt($area->updated_at)
             );
         }
 
@@ -1641,7 +1645,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) && $area->created_at->lt($area->updated_at)
+                $area->view_flg === null && $area->created_at->lt($area->updated_at)
             );
         }
 
@@ -1699,7 +1703,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->updated_at->gte($area->created_at)
+                $area->view_flg === null || $area->updated_at->gte($area->created_at)
             );
         }
 
@@ -1721,7 +1725,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->updated_at->gte($area->created_at)
+                $area->view_flg === null || $area->updated_at->gte($area->created_at)
             );
         }
 
@@ -1957,7 +1961,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg)
+                $area->view_flg !== null
             );
         }
 
@@ -2135,7 +2139,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') === '2021-01-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') === '2021-01-01'
             );
         }
 
@@ -2157,7 +2161,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') === '2021-01-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') === '2021-01-01'
             );
         }
 
@@ -2215,7 +2219,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->created_at->format('Y-m-d') > '2021-01-01'
+                $area->view_flg !== null || $area->created_at->format('Y-m-d') > '2021-01-01'
             );
         }
 
@@ -2237,7 +2241,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->created_at->format('Y-m-d') > '2021-01-01'
+                $area->view_flg !== null || $area->created_at->format('Y-m-d') > '2021-01-01'
             );
         }
 
@@ -2295,7 +2299,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->created_at->format('Y-m-d') >= '2022-03-03'
+                $area->view_flg !== null || $area->created_at->format('Y-m-d') >= '2022-03-03'
             );
         }
 
@@ -2317,7 +2321,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || $area->created_at->format('Y-m-d') >= '2022-03-03'
+                $area->view_flg !== null || $area->created_at->format('Y-m-d') >= '2022-03-03'
             );
         }
 
@@ -2375,7 +2379,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') < '2022-02-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') < '2022-02-01'
             );
         }
 
@@ -2397,7 +2401,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') < '2022-02-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') < '2022-02-01'
             );
         }
 
@@ -2455,7 +2459,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') <= '2022-02-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') <= '2022-02-01'
             );
         }
 
@@ -2477,7 +2481,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y-m-d') <= '2022-02-01'
+                $area->view_flg === null || $area->created_at->format('Y-m-d') <= '2022-02-01'
             );
         }
 
@@ -2553,7 +2557,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('m') === '01'
+                $area->view_flg === null || $area->created_at->format('m') === '01'
             );
         }
 
@@ -2575,7 +2579,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('m') === '01'
+                $area->view_flg === null || $area->created_at->format('m') === '01'
             );
         }
 
@@ -2633,7 +2637,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') > (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') > (int) '02'
             );
         }
 
@@ -2655,7 +2659,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') > (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') > (int) '02'
             );
         }
 
@@ -2713,7 +2717,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') >= (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') >= (int) '02'
             );
         }
 
@@ -2735,7 +2739,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') >= (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') >= (int) '02'
             );
         }
 
@@ -2793,7 +2797,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') < (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') < (int) '02'
             );
         }
 
@@ -2815,7 +2819,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') < (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') < (int) '02'
             );
         }
 
@@ -2873,7 +2877,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') <= (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') <= (int) '02'
             );
         }
 
@@ -2895,7 +2899,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('m') <= (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('m') <= (int) '02'
             );
         }
 
@@ -2971,7 +2975,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('d') === '01'
+                $area->view_flg === null || $area->created_at->format('d') === '01'
             );
         }
 
@@ -2993,7 +2997,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('d') === '01'
+                $area->view_flg === null || $area->created_at->format('d') === '01'
             );
         }
 
@@ -3050,7 +3054,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || (int) $area->created_at->format('d') > (int) '02'
+                $area->view_flg !== null || (int) $area->created_at->format('d') > (int) '02'
             );
         }
 
@@ -3072,7 +3076,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || (int) $area->created_at->format('d') > (int) '02'
+                $area->view_flg !== null || (int) $area->created_at->format('d') > (int) '02'
             );
         }
 
@@ -3214,7 +3218,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('d') < (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('d') < (int) '02'
             );
         }
 
@@ -3236,7 +3240,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('d') < (int) '02'
+                $area->view_flg === null || (int) $area->created_at->format('d') < (int) '02'
             );
         }
 
@@ -3294,7 +3298,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('d') <= (int) '03'
+                $area->view_flg === null || (int) $area->created_at->format('d') <= (int) '03'
             );
         }
 
@@ -3316,7 +3320,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('d') <= (int) '03'
+                $area->view_flg === null || (int) $area->created_at->format('d') <= (int) '03'
             );
         }
 
@@ -3392,7 +3396,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y') === '2021'
+                $area->view_flg === null || $area->created_at->format('Y') === '2021'
             );
         }
 
@@ -3414,7 +3418,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('Y') === '2021'
+                $area->view_flg === null || $area->created_at->format('Y') === '2021'
             );
         }
 
@@ -3472,7 +3476,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || (int) $area->created_at->format('Y') > (int) '2021'
+                $area->view_flg !== null || (int) $area->created_at->format('Y') > (int) '2021'
             );
         }
 
@@ -3494,7 +3498,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                !is_null($area->view_flg) || (int) $area->created_at->format('Y') > (int) '2021'
+                $area->view_flg !== null || (int) $area->created_at->format('Y') > (int) '2021'
             );
         }
 
@@ -3636,7 +3640,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('Y') < (int) '2022'
+                $area->view_flg === null || (int) $area->created_at->format('Y') < (int) '2022'
             );
         }
 
@@ -3658,7 +3662,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || (int) $area->created_at->format('Y') < (int) '2022'
+                $area->view_flg === null || (int) $area->created_at->format('Y') < (int) '2022'
             );
         }
 
@@ -3812,7 +3816,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('H:i:s') === '00:00:00'
+                $area->view_flg === null || $area->created_at->format('H:i:s') === '00:00:00'
             );
         }
 
@@ -3834,7 +3838,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg) || $area->created_at->format('H:i:s') === '00:00:00'
+                $area->view_flg === null || $area->created_at->format('H:i:s') === '00:00:00'
             );
         }
 
@@ -3854,7 +3858,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3875,7 +3879,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3898,7 +3902,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             $this->assertTrue(
                 $area->created_at->eq($area->updated_at)
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3922,7 +3926,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             $this->assertTrue(
                 $area->created_at->eq($area->updated_at)
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) > strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3942,7 +3946,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3963,7 +3967,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -3986,7 +3990,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             $this->assertTrue(
                 $area->created_at->eq($area->updated_at)
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4010,7 +4014,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
             $this->assertTrue(
                 $area->created_at->eq($area->updated_at)
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) >= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4030,7 +4034,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4051,7 +4055,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4072,9 +4076,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg)
+                $area->view_flg === null
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4096,9 +4100,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg)
+                $area->view_flg === null
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) < strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4118,7 +4122,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4139,7 +4143,7 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4160,9 +4164,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg)
+                $area->view_flg === null
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
@@ -4184,9 +4188,9 @@ class ExpansionEloquentMethodUnitTest extends TestCase
         /** @var Area */
         foreach ($areas as $area) {
             $this->assertTrue(
-                is_null($area->view_flg)
+                $area->view_flg === null
                 ||
-                strtotime(date('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(date('Y-m-d') . ' 02:00:00')
+                strtotime(CarbonImmutable::now()->format('Y-m-d') . ' ' . $area->updated_at->format('H:i:s')) <= strtotime(CarbonImmutable::now()->format('Y-m-d') . ' 02:00:00')
             );
         }
 
