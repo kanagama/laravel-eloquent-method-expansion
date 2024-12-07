@@ -52,7 +52,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php }}
-        extensions: mbstring, zip, xml
+        extensions: mbstring, zip, xml, xdebug
 
     - name: Get Composer Cache Directory
       id: composer-cache
