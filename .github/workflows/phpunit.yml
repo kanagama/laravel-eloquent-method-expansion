@@ -81,9 +81,11 @@ jobs:
         if [[ ${{ matrix.php }} == "8.1" || ${{ matrix.php }} == "8.2" ]]; then
           vendor/bin/phpunit --migrate-configuration || true
         fi
-        vendor/bin/phpunit tests/Unit/
+        vendor/bin/phpunit tests/Unit/ --coverage-clover coverage.xml
       env:
         DB_PORT: 13306
         DB_HOST: 127.0.0.1
         DB_USERNAME: root
         DB_PASSWORD: password
+    - name: Run octocov
+      uses: k1LoW/octocov-action@v1
